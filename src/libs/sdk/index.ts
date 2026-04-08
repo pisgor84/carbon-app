@@ -40,40 +40,42 @@ const getTokenDecimalMap = () => {
   );
 };
 
+let cache: string | undefined;
+if (shouldUseSeedData()) {
+  cache = await carbonApi.getSeedData();
+} else {
+  const { timestamp, ttl } = lsService.getItem('lastSdkCache') ?? {};
+  if (timestamp && ttl && timestamp + ttl > Date.now()) {
+    cache = lsService.getItem('sdkCompressedCacheData');
+  }
+}
+carbonSDK.setup(
+  CHAIN_ID,
+  {
+    url: RPC_URLS[CHAIN_ID],
+    headers: RPC_HEADERS[CHAIN_ID],
+  },
+  contractsConfig,
+  getTokenDecimalMap(),
+  {
+    cache,
+    pairBatchSize: config.sdk.pairBatchSize,
+    blockRangeSize: config.sdk.blockRangeSize,
+    refreshInterval: config.sdk.refreshInterval,
+  },
+);
+setTimeout(async () => {
+  console.log('SDK Cache dumped into local storage');
+  const cachedDump = await carbonSDK.getCacheDump();
+  const { ttl = defaultCacheTTL } = lsService.getItem('lastSdkCache') ?? {};
+  lsService.setItem('lastSdkCache', { timestamp: Date.now(), ttl });
+  lsService.setItem('sdkCompressedCacheData', cachedDump, true);
+}, 1000 * 60);
+
 let awaitInit: Promise<void>;
 export const getSDK = async () => {
   if (!awaitInit) {
-    let cache: string | undefined;
-    if (shouldUseSeedData()) {
-      cache = await carbonApi.getSeedData();
-    } else {
-      const { timestamp, ttl } = lsService.getItem('lastSdkCache') ?? {};
-      if (timestamp && ttl && timestamp + ttl > Date.now()) {
-        cache = lsService.getItem('sdkCompressedCacheData');
-      }
-    }
-    awaitInit = carbonSDK.init(
-      CHAIN_ID,
-      {
-        url: RPC_URLS[CHAIN_ID],
-        headers: RPC_HEADERS[CHAIN_ID],
-      },
-      contractsConfig,
-      getTokenDecimalMap(),
-      {
-        cache,
-        pairBatchSize: config.sdk.pairBatchSize,
-        blockRangeSize: config.sdk.blockRangeSize,
-        refreshInterval: config.sdk.refreshInterval,
-      },
-    );
-    setTimeout(async () => {
-      console.log('SDK Cache dumped into local storage');
-      const cachedDump = await carbonSDK.getCacheDump();
-      const { ttl = defaultCacheTTL } = lsService.getItem('lastSdkCache') ?? {};
-      lsService.setItem('lastSdkCache', { timestamp: Date.now(), ttl });
-      lsService.setItem('sdkCompressedCacheData', cachedDump, true);
-    }, 1000 * 60);
+    awaitInit = carbonSDK.startSyncing();
   }
   await awaitInit;
   return carbonSDK;

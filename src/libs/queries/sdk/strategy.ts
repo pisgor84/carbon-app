@@ -22,31 +22,24 @@ import {
   getStrategyStatus,
   isGradientStrategy,
 } from 'components/strategies/common/utils';
-import { StrategyAPI } from 'libs/queries/extApi/strategy';
+import { StrategyAPI, StrategyOrderAPI } from 'libs/queries/extApi/strategy';
 import { carbonApi } from 'services/carbonApi';
 
 const buildStrategyFromAPI = (
   s: StrategyAPI,
   getTokenById: (id: string) => Token | undefined,
-  encoded?: EncodedStrategyBNStr,
-) => {
+): Strategy | undefined => {
   const base = getTokenById(s.base);
   const quote = getTokenById(s.quote);
   if (!base || !quote) return;
-
-  const buy: StaticOrder = {
-    budget: s.buy.budget,
-    min: s.buy.min,
-    max: s.buy.max,
-    marginalPrice: s.buy.marginal,
-  };
-
-  const sell: StaticOrder = {
-    budget: s.sell.budget,
-    min: s.sell.min,
-    max: s.sell.max,
-    marginalPrice: s.sell.marginal,
-  };
+  const toOrder = (order: StrategyOrderAPI): StaticOrder => ({
+    budget: order.budget,
+    min: order.min,
+    max: order.max,
+    marginalPrice: order.marginal,
+  });
+  const buy = toOrder(s.buy);
+  const sell = toOrder(s.sell);
 
   return {
     type: 'static',
@@ -58,8 +51,14 @@ const buildStrategyFromAPI = (
     sell,
     owner: s.owner,
     status: getStrategyStatus({ buy, sell }),
-    encoded,
-  } as Strategy;
+    encoded: {
+      id: s.id,
+      token0: s.base,
+      token1: s.quote,
+      order0: s.encoded.order0,
+      order1: s.encoded.order1,
+    },
+  };
 };
 
 // READ
@@ -259,8 +258,13 @@ export const useUpdateStrategyQuery = (strategy: AnyStrategy) => {
   return useMutation({
     mutationFn: async (orders: EditOrders) => {
       const updates = getFieldsToUpdate(orders, strategy);
-      if (!strategy.encoded)
+      if (!strategy.encoded) {
         throw new Error('No encoded found on the strategy');
+      }
+      console.log({
+        strategy,
+        updates,
+      });
       const unsignedTx = await carbonSDK.updateStrategy(
         strategy.id,
         strategy.encoded,
