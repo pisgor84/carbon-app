@@ -324,7 +324,7 @@ export const LiquidityMatrixPage = () => {
     const create = async () => {
       try {
         if (!user) throw new Error('No user found');
-        const canBatch = false; // await canBatchTransactions(user);
+        const canBatch = await canBatchTransactions(user);
         const transactions: TransactionRequest[] = [];
         if (canBatch) {
           const getTransactions = strategies.map((strategy) => {
