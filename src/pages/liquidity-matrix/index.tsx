@@ -326,7 +326,7 @@ export const LiquidityMatrixPage = () => {
         if (!user) throw new Error('No user found');
         const canBatch = await canBatchTransactions(user);
         const transactions: TransactionRequest[] = [];
-        if (canBatch) {
+        if (canBatch && strategies.length < 10) {
           const getTransactions = strategies.map((strategy) => {
             return carbonSDK.createBuySellStrategy(
               strategy.base,
