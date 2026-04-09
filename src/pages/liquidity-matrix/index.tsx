@@ -9,6 +9,7 @@ import ChevronIcon from 'assets/icons/chevron.svg?react';
 import {
   FC,
   FormEvent,
+  MouseEvent,
   useCallback,
   useEffect,
   useId,
@@ -317,13 +318,13 @@ export const LiquidityMatrixPage = () => {
     set({ pairs: copy });
   };
 
-  const createAll = async (e: FormEvent<HTMLFormElement>) => {
+  const createAll = async (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     if (!batcher) return;
     const create = async () => {
       try {
         if (!user) throw new Error('No user found');
-        const canBatch = await canBatchTransactions(user);
+        const canBatch = false; // await canBatchTransactions(user);
         const transactions: TransactionRequest[] = [];
         if (canBatch) {
           const getTransactions = strategies.map((strategy) => {
@@ -385,11 +386,7 @@ export const LiquidityMatrixPage = () => {
   return (
     <section className="page">
       <h1>Liquidity Matrix</h1>
-      <form
-        onSubmit={createAll}
-        data-disabled={disabled}
-        className="matrix-form"
-      >
+      <form data-disabled={disabled} className="matrix-form">
         <article role="group">
           <h2>Base token</h2>
           <div className="base">
@@ -555,7 +552,7 @@ export const LiquidityMatrixPage = () => {
           </div>
           {batcher && user && strategies.length > 1 && (
             <footer className="flex flex-col justify-end md:flex-row">
-              <button className="btn-main-gradient" type="submit">
+              <button className="btn-main-gradient" onClick={createAll}>
                 Create All
               </button>
             </footer>
@@ -835,8 +832,7 @@ export const SaveLocally = () => {
                 search={savedMatrix[base.address]}
                 onClick={() => flip('article, h2, li, tr')}
               >
-                <TokenLogo className="main-icon" token={base} size={32} />
-                <span className="description">{base.symbol}</span>
+                <TokenLogo className="main-icon" token={base} size={24} />
                 <TokensOverlap tokens={quotes ?? []} size={24} />
               </Link>
               <button
@@ -904,8 +900,7 @@ const StrategyRow: FC<StrategyProps> = ({ base, spread, strategy, clear }) => {
     if (!user) {
       openModal('wallet');
     } else {
-      await createStrategy();
-      clear();
+      createStrategy().then(() => clear());
     }
   };
 
@@ -982,8 +977,7 @@ const StrategyItem: FC<StrategyProps> = ({ base, spread, strategy, clear }) => {
     if (!user) {
       openModal('wallet');
     } else {
-      await createStrategy();
-      clear();
+      createStrategy().then(() => clear());
     }
   };
 

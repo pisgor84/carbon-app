@@ -88,62 +88,66 @@ export const useCreateStrategy = (props: Props) => {
     if (!checked) return;
     if (!user) return openConnect();
 
-    const onConfirm = () => {
-      return mutation.mutate(toCreateStrategyParams(base, quote, buy, sell), {
-        onSuccess: async (tx) => {
-          handleTxStatusAndRedirectToOverview(setIsProcessing, navigate);
-          dispatchNotification('createStrategy', { txHash: tx.hash });
-          carbonEvents.strategy.createStrategy({
-            token_pair: `${base.symbol}/${quote.symbol}`,
-            strategy_base_token: base.symbol,
-            strategy_quote_token: quote.symbol,
-            strategy_category: 'static',
-            strategy_type: getStrategyType({ buy, sell }),
-          });
-          await tx.wait();
-          cache.invalidateQueries({
-            queryKey: QueryKey.strategiesByUser(user),
-          });
-          cache.invalidateQueries({
-            queryKey: QueryKey.balance(user, base.address),
-          });
-          cache.invalidateQueries({
-            queryKey: QueryKey.balance(user, quote.address),
-          });
-        },
-        onError: (e: any) => {
-          setIsProcessing(false);
-          console.error('create mutation failed', e);
-          // TODO add error notification
-          // TODO handle user rejected transaction
-          // dispatchNotification('generic', {
-          //   status: 'failed',
-          //   title: 'Strategy creation failed',
-          //   description:
-          //     e.message || 'Unknown error - please try again or contact support',
-          //   showAlert: true,
-          // });
-        },
-      });
-    };
+    return new Promise((resolve, reject) => {
+      const onConfirm = () => {
+        mutation.mutate(toCreateStrategyParams(base, quote, buy, sell), {
+          onSuccess: async (tx) => {
+            handleTxStatusAndRedirectToOverview(setIsProcessing, navigate);
+            dispatchNotification('createStrategy', { txHash: tx.hash });
+            carbonEvents.strategy.createStrategy({
+              token_pair: `${base.symbol}/${quote.symbol}`,
+              strategy_base_token: base.symbol,
+              strategy_quote_token: quote.symbol,
+              strategy_category: 'static',
+              strategy_type: getStrategyType({ buy, sell }),
+            });
+            await tx.wait();
+            cache.invalidateQueries({
+              queryKey: QueryKey.strategiesByUser(user),
+            });
+            cache.invalidateQueries({
+              queryKey: QueryKey.balance(user, base.address),
+            });
+            cache.invalidateQueries({
+              queryKey: QueryKey.balance(user, quote.address),
+            });
+            resolve(tx.hash);
+          },
+          onError: (e: any) => {
+            reject(e);
+            setIsProcessing(false);
+            console.error('create mutation failed', e);
+            // TODO add error notification
+            // TODO handle user rejected transaction
+            // dispatchNotification('generic', {
+            //   status: 'failed',
+            //   title: 'Strategy creation failed',
+            //   description:
+            //     e.message || 'Unknown error - please try again or contact support',
+            //   showAlert: true,
+            // });
+          },
+        });
+      };
 
-    if (!+buy.budget && !+sell.budget) {
-      return openModal('genericInfo', {
-        title: 'Empty Strategy Warning',
-        text: 'You are about to create a strategy with no associated budget. It will be inactive until you deposit funds.',
-        variant: 'warning',
-        onConfirm,
-      });
-    }
+      if (!+buy.budget && !+sell.budget) {
+        return openModal('genericInfo', {
+          title: 'Empty Strategy Warning',
+          text: 'You are about to create a strategy with no associated budget. It will be inactive until you deposit funds.',
+          variant: 'warning',
+          onConfirm,
+        });
+      }
 
-    if (approval.approvalRequired) {
-      return openModal('txConfirm', {
-        approvalTokens,
-        onConfirm,
-        buttonLabel: 'Create',
-      });
-    }
-    return onConfirm();
+      if (approval.approvalRequired) {
+        return openModal('txConfirm', {
+          approvalTokens,
+          onConfirm,
+          buttonLabel: 'Create',
+        });
+      }
+      return onConfirm();
+    });
   };
 
   return {
