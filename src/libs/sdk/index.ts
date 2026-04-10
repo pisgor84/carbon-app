@@ -71,12 +71,3 @@ setTimeout(async () => {
   lsService.setItem('lastSdkCache', { timestamp: Date.now(), ttl });
   lsService.setItem('sdkCompressedCacheData', cachedDump, true);
 }, 1000 * 60);
-
-let awaitInit: Promise<void>;
-export const getSDK = async () => {
-  if (!awaitInit) {
-    awaitInit = carbonSDK.startSyncing();
-  }
-  await awaitInit;
-  return carbonSDK;
-};

@@ -3,8 +3,6 @@ import * as Comlink from 'comlink';
 import {
   PayableOverrides,
   TradeActionBNStr,
-  TokenPair,
-  MatchActionBNStr,
   StrategyUpdate,
   EncodedStrategyBNStr,
 } from '@bancor/carbon-sdk';
@@ -79,40 +77,8 @@ const setup = async (
   );
 };
 
-// Only start syncing on Trade page
-const startSyncing = async () => {
-  await syncedCache.startDataSync();
-};
-
 const sdkExposed = {
-  startSyncing,
   setup,
-  getAllPairs: () => api.reader.pairs(),
-  setOnChangeHandlers: (
-    onPairDataChanged: (affectedPairs: TokenPair[]) => void,
-    onPairAddedToCache: (affectedPairs: TokenPair) => void,
-    onCacheCleared: () => void,
-  ) => {
-    sdkCache.on('onPairDataChanged', onPairDataChanged);
-    sdkCache.on('onPairAddedToCache', onPairAddedToCache);
-    sdkCache.on('onCacheCleared', onCacheCleared);
-  },
-  setOffChangeHandlers: (
-    onPairDataChanged: (affectedPairs: TokenPair[]) => void,
-    onPairAddedToCache: (affectedPairs: TokenPair) => void,
-    onCacheCleared: () => void,
-  ) => {
-    sdkCache.off('onPairDataChanged', onPairDataChanged);
-    sdkCache.off('onPairAddedToCache', onPairAddedToCache);
-    sdkCache.off('onCacheCleared', onCacheCleared);
-  },
-  hasLiquidityByPair: (baseToken: string, quoteToken: string) =>
-    carbonSDK.hasLiquidityByPair(baseToken, quoteToken),
-  getUserStrategies: (address: string) => carbonSDK.getUserStrategies(address),
-  getAllStrategiesByPairs: () => carbonSDK.getStrategiesByPairs(),
-  getStrategiesByPair: (token0: string, token1: string) =>
-    carbonSDK.getStrategiesByPair(token0, token1),
-  getStrategy: (id: string) => carbonSDK.getStrategyById(id),
   createBuySellStrategy: (
     baseToken: string,
     quoteToken: string,
@@ -159,27 +125,10 @@ const sdkExposed = {
       overrides,
     ),
   deleteStrategy: (strategyId: string) => carbonSDK.deleteStrategy(strategyId),
-  getTradeData: (
-    sourceToken: string,
-    targetToken: string,
-    amount: string,
-    isTradeBySource: boolean,
-  ) =>
-    carbonSDK.getTradeData(sourceToken, targetToken, amount, isTradeBySource),
-  getTradeDataFromActions: (
-    sourceToken: string,
-    targetToken: string,
-    isTradeBySource: boolean,
-    actionsWei: MatchActionBNStr[],
-  ) =>
-    carbonSDK.getTradeDataFromActions(
-      sourceToken,
-      targetToken,
-      isTradeBySource,
-      actionsWei,
-    ),
-  getLiquidityByPair: (baseToken: string, quoteToken: string) =>
-    carbonSDK.getLiquidityByPair(baseToken, quoteToken),
+  getTradeData: Toolkit.getTradeDataStatic,
+  getTradeDataFromActions: Toolkit.getTradeDataFromActionsStatic,
+  getLiquidityByPair: Toolkit.getLiquidityByPairStatic,
+  getMaxSourceAmountByPair: Toolkit.getMaxSourceAmountByPairStatic,
   composeTradeBySourceTransaction: (
     sourceToken: string,
     targetToken: string,
@@ -213,8 +162,6 @@ const sdkExposed = {
       overrides,
     ),
   getCacheDump: () => sdkCache.serialize(),
-  getMaxSourceAmountByPair: (source: string, target: string) =>
-    carbonSDK.getMaxSourceAmountByPair(source, target),
 };
 
 export type CarbonSDKWebWorker = typeof sdkExposed;

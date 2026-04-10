@@ -55,10 +55,7 @@ export const useBuySell = ({
     isTradeBySource,
     sourceInput,
   });
-  const maxSourceAmountQuery = useGetMaxSourceAmountByPair(
-    source.address,
-    target.address,
-  );
+  const maxSourceAmountQuery = useGetMaxSourceAmountByPair(source, target);
 
   const clearInputs = useCallback(() => {
     setSourceInput('');
@@ -102,7 +99,7 @@ export const useBuySell = ({
     enabled: !isTradeBySource,
   });
 
-  const liquidityQuery = useGetTradeLiquidity(source.address, target.address);
+  const liquidityQuery = useGetTradeLiquidity(source, target);
 
   const checkLiquidity = useCallback(() => {
     if (config.ui.useOpenocean) return;

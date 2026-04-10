@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { QueryKey } from 'libs/queries';
+import { QueryKey, useGetAllStrategies } from 'libs/queries';
 import { SafeDecimal } from 'libs/safedecimal';
-import { Action, getSDK, TradeActionBNStr } from 'libs/sdk';
+import { Action, carbonSDK, TradeActionBNStr } from 'libs/sdk';
 import { MatchActionBNStr, PopulatedTransaction } from '@bancor/carbon-sdk';
 import { useWagmi } from 'libs/wagmi';
 import { useTokens } from 'hooks/useTokens';
@@ -10,6 +10,7 @@ import { useStore } from 'store';
 import { Token } from 'libs/tokens';
 import { TransactionRequest } from 'ethers';
 import config from 'config';
+import { useCarbonController } from 'hooks/useContract';
 
 interface GetTradeDataResult {
   tradeActions: TradeActionBNStr[];
@@ -93,8 +94,7 @@ export const useTradeQuery = () => {
         let unsignedTx: PopulatedTransaction;
         let baseAmount: string;
         if (params.isTradeBySource) {
-          const sdk = await getSDK();
-          unsignedTx = await sdk.composeTradeBySourceTransaction(
+          unsignedTx = await carbonSDK.composeTradeBySourceTransaction(
             params.source.address,
             params.target.address,
             params.tradeActions,
@@ -103,8 +103,7 @@ export const useTradeQuery = () => {
           );
           baseAmount = params.sourceInput;
         } else {
-          const sdk = await getSDK();
-          unsignedTx = await sdk.composeTradeByTargetTransaction(
+          unsignedTx = await carbonSDK.composeTradeByTargetTransaction(
             params.source.address,
             params.target.address,
             params.tradeActions,
@@ -150,6 +149,8 @@ export const useGetTradeData = ({
   enabled,
 }: Props) => {
   const { trade } = useStore();
+  const { data: strategies } = useGetAllStrategies({ enabled: !!enabled });
+  const { data: controller } = useCarbonController();
 
   return useQuery<GetTradeDataResult>({
     queryKey: QueryKey.tradeData(
@@ -202,16 +203,23 @@ export const useGetTradeData = ({
           path: res.path,
         };
       } else {
-        const sdk = await getSDK();
-        return sdk.getTradeData(
+        const tradingFeePPM = await controller!.read.pairTradingFeePPM(
           sourceToken.address,
           targetToken.address,
-          input,
-          !isTradeBySource,
         );
+        return carbonSDK.getTradeData({
+          amount: input,
+          strategies: strategies!.map((s) => s.encoded).filter((e) => !!e),
+          tradeByTargetAmount: !isTradeBySource,
+          sourceToken: sourceToken.address,
+          sourceDecimals: sourceToken.decimals,
+          targetToken: targetToken.address,
+          targetDecimals: targetToken.decimals,
+          tradingFeePPM: Number(tradingFeePPM),
+        });
       }
     },
-    enabled: !!enabled,
+    enabled: !!enabled && !!strategies && !!controller,
     gcTime: 0,
     retry: 1,
   });

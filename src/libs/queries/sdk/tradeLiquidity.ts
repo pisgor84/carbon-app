@@ -1,35 +1,36 @@
 import { useQuery } from '@tanstack/react-query';
-import { QueryKey } from 'libs/queries';
+import { QueryKey, useGetAllStrategies } from 'libs/queries';
 import { ONE_DAY_IN_MS } from 'utils/time';
 import { openocean } from 'services/openocean';
-import { useTokens } from 'hooks/useTokens';
+import { carbonSDK } from 'libs/sdk';
+import { Token } from 'libs/tokens';
 import config from 'config';
-import { getSDK } from 'libs/sdk';
 
-export const useGetTradeLiquidity = (base?: string, quote?: string) => {
-  const { getTokenById } = useTokens();
-
+export const useGetTradeLiquidity = (source: Token, target: Token) => {
+  const { data: strategies } = useGetAllStrategies({ enabled: true });
   return useQuery({
-    queryKey: QueryKey.tradeLiquidity([base!, quote!]),
+    queryKey: QueryKey.tradeLiquidity([source.address, target.address]),
     queryFn: async () => {
       if (config.ui.useOpenocean) {
-        const baseToken = getTokenById(base);
-        if (!baseToken) return '';
         const gasPrice = await openocean.gasPrice();
         // Try to trade one token. Since liquidity is only checking if > 0 it should be fine.
         const res = await openocean.quote({
-          amountDecimals: (10 ** baseToken.decimals).toString(),
-          inTokenAddress: base!,
-          outTokenAddress: quote!,
+          amountDecimals: (10 ** source.decimals).toString(),
+          inTokenAddress: source.address,
+          outTokenAddress: target.address,
           gasPriceDecimals: gasPrice.toString(),
         });
         return res.outAmount;
       } else {
-        const sdk = await getSDK();
-        return sdk.getLiquidityByPair(base!, quote!);
+        return carbonSDK.getLiquidityByPair({
+          sourceToken: source.address,
+          targetToken: target.address,
+          targetDecimals: target.decimals,
+          strategies: strategies!.map((s) => s.encoded).filter((e) => !!e),
+        });
       }
     },
-    enabled: !!base && !!quote,
+    enabled: !!strategies,
     staleTime: ONE_DAY_IN_MS,
   });
 };
