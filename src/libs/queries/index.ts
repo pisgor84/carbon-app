@@ -13,6 +13,5 @@ export {
   useIsMutating,
 } from '@tanstack/react-query';
 export type { UseQueryResult } from '@tanstack/react-query';
-export { useGetMaxSourceAmountByPair } from 'libs/queries/sdk/maxSourceAmount';
 export { useGetTokenPrice } from 'libs/queries/extApi/tokenPrice';
 export * from 'libs/queries/extApi/simulator';
