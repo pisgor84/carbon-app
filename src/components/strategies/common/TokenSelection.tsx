@@ -78,7 +78,7 @@ export const TokenSelection: FC<Props> = ({ url, base, quote }) => {
         data-testid="select-base-token"
         onClick={() => openTokenListModal('base')}
       >
-        <DisplayToken token={base} label="Buy or Sell" />
+        <DisplayToken token={base} label="Buy or sell" />
       </button>
       <button
         role="menuitem"
