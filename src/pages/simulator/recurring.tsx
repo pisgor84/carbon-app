@@ -142,7 +142,7 @@ export const SimulatorInputRecurringPage = () => {
   const noBudgetByOrders =
     Number(buyOrder.budget) + Number(sellOrder.budget) <= 0;
   const noBudgetText =
-    !emptyHistory && noBudgetByOrders && 'Please add Sell and/or Buy budgets';
+    !emptyHistory && noBudgetByOrders && 'Please add sell and/or buy budgets';
   const btnDisabled = emptyHistory || noBudgetByOrders;
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
