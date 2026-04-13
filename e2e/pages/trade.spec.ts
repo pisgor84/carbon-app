@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { mockApi } from '../utils/mock-api';
-import {
-  DebugDriver,
-  removeFork,
-  setupVirtualNetwork,
-  setupLocalStorage,
-} from '../utils/DebugDriver';
+import { DebugDriver, setupLocalStorage } from '../utils/DebugDriver';
 import { TradeDriver } from '../utils/TradeDriver';
 import { navigateTo } from '../utils/operators';
 import { TokenApprovalDriver } from '../utils/TokenApprovalDriver';
@@ -89,12 +84,9 @@ test.describe('Trade', () => {
   test.beforeEach(async ({ page }, testInfo) => {
     testInfo.setTimeout(90_000);
     await mockApi(page);
-    const vNet = await setupVirtualNetwork(testInfo);
-    const rpc = vNet.rpcs.find(({ name }) => name === 'Admin RPC')!.url;
-    await setupLocalStorage(page, rpc);
+    await setupLocalStorage(page);
     const debug = new DebugDriver(page);
     await debug.visit();
-    // await page.getByTestId('close-walkthrough').click();
     await debug.setupImposter();
     await page.getByText('Get money').click();
   });
@@ -102,7 +94,7 @@ test.describe('Trade', () => {
   // Need an empty object else the tests don't run
   // eslint-disable-next-line no-empty-pattern
   test.afterEach(async ({}, testInfo) => {
-    await removeFork(testInfo);
+    //
   });
 
   for (const testCase of testCases) {

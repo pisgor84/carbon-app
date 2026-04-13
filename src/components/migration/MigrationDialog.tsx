@@ -156,6 +156,7 @@ export const PositionDialog: FC<Props> = (props) => {
       });
       const keys = [
         QueryKey.strategyAll(),
+        QueryKey.strategiesByUser(user),
         QueryKey.balance(user, p.base.address),
         QueryKey.balance(user, p.quote.address),
         QueryKey.dexMigration(p.dex, user),

@@ -102,19 +102,17 @@ export const EditBudgetForm: FC<Props> = (props) => {
         if (!tx) return;
         console.log('tx hash', tx.hash);
         await tx.wait();
-        cache.invalidateQueries({
-          queryKey: QueryKey.strategyAll(),
-        });
-        if (orders.sell.budget !== strategy.sell.budget) {
-          cache.invalidateQueries({
-            queryKey: QueryKey.balance(user!, strategy.base.address),
-          });
-        }
-        if (orders.buy.budget !== strategy.buy.budget) {
-          cache.invalidateQueries({
-            queryKey: QueryKey.balance(user!, strategy.quote.address),
-          });
-        }
+        setTimeout(() => {
+          const keys = [
+            QueryKey.strategyAll(),
+            QueryKey.strategiesByUser(user),
+            QueryKey.balance(user!, strategy.base.address),
+            QueryKey.balance(user!, strategy.quote.address),
+          ];
+          for (const queryKey of keys) {
+            cache.refetchQueries({ queryKey });
+          }
+        }, 3000);
         console.log('tx confirmed');
       },
       onError: (e) => {

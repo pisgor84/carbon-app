@@ -142,20 +142,17 @@ export const EditPricesForm: FC<Props> = (props) => {
         if (!tx) return;
         console.log('tx hash', tx.hash);
         await tx.wait();
-        cache.invalidateQueries({
-          queryKey: QueryKey.strategyAll(),
-        });
-        const fieldsToUpdate = getFieldsToUpdate(orders, strategy);
-        if (fieldsToUpdate.sellBudget) {
-          cache.invalidateQueries({
-            queryKey: QueryKey.balance(user!, strategy.base.address),
-          });
-        }
-        if (fieldsToUpdate.buyBudget) {
-          cache.invalidateQueries({
-            queryKey: QueryKey.balance(user!, strategy.quote.address),
-          });
-        }
+        setTimeout(() => {
+          const keys = [
+            QueryKey.strategyAll(),
+            QueryKey.strategiesByUser(user),
+            QueryKey.balance(user!, strategy.base.address),
+            QueryKey.balance(user!, strategy.quote.address),
+          ];
+          for (const queryKey of keys) {
+            cache.refetchQueries({ queryKey });
+          }
+        }, 3000);
         console.log('tx confirmed');
       },
       onError: (e) => {

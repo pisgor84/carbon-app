@@ -197,6 +197,9 @@ export const CartPage = () => {
         cache.invalidateQueries({
           queryKey: QueryKey.strategyAll(),
         });
+        cache.invalidateQueries({
+          queryKey: QueryKey.strategiesByUser(user),
+        });
 
         for (const token of tokens) {
           cache.invalidateQueries({

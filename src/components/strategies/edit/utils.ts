@@ -7,6 +7,7 @@ import {
 } from 'components/strategies/common/utils';
 import { AnyStrategy, Strategy } from '../common/types';
 import { useNotifications } from 'hooks/useNotifications';
+import { useWagmi } from 'libs/wagmi';
 
 export const getDeposit = (initialBudget?: string, newBudget?: string) => {
   const value = new SafeDecimal(newBudget || '0').sub(initialBudget || '0');
@@ -83,6 +84,7 @@ export const useEditToDisposableSell = (strategy: AnyStrategy) => {
   const updateMutation = useUpdateStrategyQuery(strategy);
   const { dispatchNotification } = useNotifications();
   const cache = useQueryClient();
+  const { user } = useWagmi();
   return () => {
     if (isGradientStrategy(strategy)) {
       return console.error('Cannot change a gradient strategy into disposable');
@@ -103,7 +105,12 @@ export const useEditToDisposableSell = (strategy: AnyStrategy) => {
         console.log('tx hash', tx.hash);
         await tx.wait();
         cache.invalidateQueries({
-          queryKey: QueryKey.strategyAll(),
+          queryKey: [
+            QueryKey.strategyAll(),
+            QueryKey.strategiesByUser(user),
+            QueryKey.balance(user!, strategy.base.address),
+            QueryKey.balance(user!, strategy.quote.address),
+          ],
         });
       },
       onError: (e) => {

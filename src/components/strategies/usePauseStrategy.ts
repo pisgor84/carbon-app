@@ -42,9 +42,15 @@ export const usePauseStrategy = () => {
         console.log('tx hash', tx.hash);
         await tx.wait();
 
-        cache.invalidateQueries({
-          queryKey: QueryKey.strategyAll(),
-        });
+        setTimeout(() => {
+          const keys = [
+            QueryKey.strategyAll(),
+            QueryKey.strategiesByUser(user),
+          ];
+          for (const queryKey of keys) {
+            cache.refetchQueries({ queryKey });
+          }
+        }, 3000);
         console.log('tx confirmed');
         successEventsCb?.();
       },
