@@ -23,9 +23,9 @@ import { useFiatCurrency } from 'hooks/useFiatCurrency';
 import { useTradeAction } from './useTradeAction';
 import { carbonEvents } from 'services/events';
 import { useGetMaxSource } from 'libs/queries/sdk/maxSourceAmount';
-import IconRouting from 'assets/icons/routing.svg?react';
-import IconChevron from 'assets/icons/chevron.svg?react';
-import IconArrow from 'assets/icons/arrowDown.svg?react';
+import RouteIcon from 'assets/icons/route.svg?react';
+import KeyboardArrowDownIcon from 'assets/icons/keyboard_arrow_down.svg?react';
+import ArrowDownwardIcon from 'assets/icons/arrow_downward.svg?react';
 import config from 'config';
 import { useDebounced } from 'hooks/useDebouncedValue';
 
@@ -365,7 +365,7 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
             >
               <TokenLogo token={source} size={20} />
               <span className="font-medium">{source.symbol}</span>
-              <IconChevron className="size-14" />
+              <KeyboardArrowDownIcon className="size-24" />
             </button>
           </TokenInputField>
         </div>
@@ -375,7 +375,7 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
           type="button"
           className="grid place-items-center place-self-center size-40 -my-12 border-2 border-main-900 btn-on-background p-0 rounded-full z-1 bg-main-600 hover:bg-main-500"
         >
-          <IconArrow className="size-16" />
+          <ArrowDownwardIcon className="size-24" />
         </button>
         <div className="grid gap-8">
           <div className="rounded-b-xs rounded-t-xl input-container relative">
@@ -402,7 +402,7 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
               >
                 <TokenLogo token={target} size={20} />
                 <span className="font-medium">{target.symbol}</span>
-                <IconChevron className="size-14" />
+                <KeyboardArrowDownIcon className="size-24" />
               </button>
             </TokenInputField>
           </div>
@@ -421,7 +421,7 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
                   className="flex gap-8 text-left hover:text-main-0 md:flex"
                   data-testid="routing"
                 >
-                  <IconRouting className="w-12" />
+                  <RouteIcon className="w-12" />
                   <span>Routing</span>
                 </p>
               )}
