@@ -4,7 +4,7 @@ import {
 } from 'components/strategies/common/types';
 import { FC } from 'react';
 import { getTooltipTextByStatus, statusText } from './utils';
-import AnalyticsIcon from 'assets/icons/analytics.svg?react';
+import InsertChartIcon from 'assets/icons/insert_chart.svg?react';
 import {
   ManageButtonIcon,
   StrategyBlockManage,
@@ -47,7 +47,7 @@ export const StrategyBlockHeader: FC<Props> = ({ strategy, isExplorer }) => {
           params={{ id: strategy.id }}
           className="btn-on-surface size-38 rounded-sm grid place-items-center p-0"
         >
-          <AnalyticsIcon className="size-24" />
+          <InsertChartIcon className="size-24" />
         </Link>
         <StrategyBlockManage
           strategy={strategy}
