@@ -50,10 +50,7 @@ export const useModalTradeRouting = ({
   const { data, isPending, isError } = useGetTradeActionsQuery(tradeProps);
   const sourceInput = data?.totalSourceAmount || '0';
 
-  const { trade, calcMaxInput, isAwaiting, approval } = useTradeAction({
-    source,
-    isTradeBySource,
-    sourceInput,
+  const { trade, calcMaxInput, isAwaiting } = useTradeAction({
     onSuccess: () => {
       onSuccess();
       closeModal(id);
@@ -65,37 +62,21 @@ export const useModalTradeRouting = ({
       return openConnect();
     }
 
-    if (approval.isPending || isPending || isError) {
+    if (isPending || isError) {
       return;
     }
 
-    const tradeFn = async () =>
-      await trade({
-        source,
-        target,
-        tradeActions: data.tradeActions,
-        isTradeBySource,
-        sourceInput,
-        targetInput: data.totalTargetAmount,
-      });
-
-    if (approval.approvalRequired) {
-      openModal('txConfirm', {
-        approvalTokens: approval.tokens,
-        onConfirm: () => {
-          tradeFn();
-        },
-        buttonLabel: 'Confirm Trade',
-      });
-    } else {
-      void tradeFn();
-    }
+    return trade({
+      source,
+      target,
+      tradeActions: data.tradeActions,
+      isTradeBySource,
+      sourceInput,
+      targetInput: data.totalTargetAmount,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     user,
-    approval.isPending,
-    approval.approvalRequired,
-    approval.tokens,
     isPending,
     isError,
     openModal,
