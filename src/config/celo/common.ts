@@ -143,7 +143,7 @@ export const commonConfig: AppConfig = {
       logo: '/logos/merkl.webp',
     },
     // walkthroughId: 'uouygtywoj3c',
-    useDexAggregator: true,
+    useDexAggregator: false,
     useSeedData: true,
     useEIP7702: true,
   },
