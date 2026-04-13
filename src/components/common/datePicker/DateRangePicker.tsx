@@ -38,7 +38,7 @@ interface Props {
 }
 
 const displayRange = (start?: Date, end?: Date) => {
-  if (!start || !end) return 'Select Date Range';
+  if (!start || !end) return 'Select date range';
   if (isSameDay(start, end)) return dateFormatter.format(start);
   return `${dateFormatter.format(start)} - ${dateFormatter.format(end)}`;
 };
@@ -249,7 +249,7 @@ export const DatePickerButton = memo(function DatePickerButton({
         className="justify-self-end text-main-0/60"
         data-testid="simulation-dates"
       >
-        {hasDates ? `${_sD_} - ${_eD_}` : 'Select Date Range'}
+        {hasDates ? `${_sD_} - ${_eD_}` : 'Select date range'}
       </span>
       <ChevronIcon className="size-12 rotate-180 text-main-0/80" />
     </>

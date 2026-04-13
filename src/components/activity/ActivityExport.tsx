@@ -137,7 +137,7 @@ export const ActivityExport = () => {
         disabled={loading}
         className={styles.exportButton}
       >
-        <span className={styles.export}>Export Activities</span>
+        <span className={styles.export}>Export activities</span>
         <span className={styles.exporting}>Exporting</span>
         <svg
           className={styles.loading}

@@ -38,7 +38,7 @@ export default function TonConnectBtn() {
         onClick={() => tonConnectUI.openModal()}
       >
         <TelegramIcon />
-        <span>Connect Wallet</span>
+        <span>Connect wallet</span>
       </button>
     );
   }
@@ -63,7 +63,7 @@ const Menu = () => {
         onClick={copyAddress}
       >
         <IconCopy className="w-16" />
-        <span>Copy Address</span>
+        <span>Copy address</span>
       </button>
       <button
         role="menuitem"

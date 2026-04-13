@@ -82,7 +82,7 @@ export const PairTable: FC<Props> = ({ url, pairs }) => {
                     to="/trade"
                     search={{ base: base.address, quote: quote.address }}
                   >
-                    Create Position
+                    Create position
                   </Link>
                   <Link
                     className="btn-on-surface"

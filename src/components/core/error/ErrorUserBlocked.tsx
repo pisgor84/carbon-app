@@ -16,7 +16,7 @@ export const ErrorUserBlocked = () => {
           to={externalLinks.treasuryGov}
           className="w-full btn-on-surface text-14 "
         >
-          Learn More
+          Learn more
         </NewTabLink>
         <button className="btn-on-surface text-14 " onClick={disconnect}>
           Logout

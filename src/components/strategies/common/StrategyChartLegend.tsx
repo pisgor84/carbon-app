@@ -6,7 +6,7 @@ export const StrategyChartLegend = () => {
     <footer className="text-12 flex flex-col gap-16">
       <p className="flex items-center gap-8">
         <IconLock className="size-16 shrink-0" />
-        Strategy prices can only be modified when selecting "Edit Prices"
+        Strategy prices can only be modified when selecting "Edit prices"
         option.
       </p>
       <p className="flex items-center gap-8">

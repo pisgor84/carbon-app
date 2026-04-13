@@ -168,7 +168,7 @@ export const SimulatorInputOverlappingPage = () => {
           disabled={btnDisabled}
           className="btn-main-gradient text-16 py-12"
         >
-          {loadingText || noBudgetText || 'Start Simulation'}
+          {loadingText || noBudgetText || 'Start simulation'}
         </button>
       </form>
     </>

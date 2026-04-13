@@ -194,7 +194,7 @@ export const InputRange: FC<Props> = (props) => {
                   onClick={setMinMarket}
                   data-testid="market-price-min"
                 >
-                  Use Market
+                  Use market
                 </button>
               )}
             </header>
@@ -253,7 +253,7 @@ export const InputRange: FC<Props> = (props) => {
                   onClick={setMaxMarket}
                   data-testid="market-price-max"
                 >
-                  Use Market
+                  Use market
                 </button>
               )}
             </header>

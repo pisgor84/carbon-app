@@ -35,11 +35,11 @@ export const MainMenuRightWallet: FC = () => {
   }, [isSupportedNetwork, isUserBlocked, user]);
 
   const buttonText = useMemo(() => {
-    if (isUserBlocked) return 'Wallet Blocked';
-    if (!isSupportedNetwork) return 'Wrong Network';
+    if (isUserBlocked) return 'Wallet blocked';
+    if (!isSupportedNetwork) return 'Wrong network';
     if (!user) {
-      if (location.pathname === '/') return 'Launch App';
-      return 'Connect Wallet';
+      if (location.pathname === '/') return 'Launch app';
+      return 'Connect wallet';
     }
     return shortenString(ensName || user);
   }, [ensName, isSupportedNetwork, isUserBlocked, location.pathname, user]);
@@ -125,7 +125,7 @@ const ConnectedMenu: FC = () => {
             onClick={copyAddress}
           >
             <IconCopy className="w-16" />
-            <span>Copy Address</span>
+            <span>Copy address</span>
           </button>
         </>
       ) : (
@@ -134,7 +134,7 @@ const ConnectedMenu: FC = () => {
           className="rounded-sm text-error/80 hover:text-error flex w-full p-8 hover:bg-main-900/40"
           onClick={switchNetwork}
         >
-          Switch Network
+          Switch network
         </button>
       )}
       <button

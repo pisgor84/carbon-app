@@ -127,8 +127,8 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
   }, [isBuy, rate, source.symbol, target.symbol, warning]);
 
   const ctaButtonText = (() => {
-    if (!hasEnoughLiquidity) return 'No Liquidity available';
-    if (!user) return 'Connect Wallet';
+    if (!hasEnoughLiquidity) return 'No liquidity available';
+    if (!user) return 'Connect wallet';
     return isBuy ? `Buy ${target.symbol}` : `Sell ${source.symbol}`;
   })();
 

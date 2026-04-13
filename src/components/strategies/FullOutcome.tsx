@@ -39,7 +39,7 @@ export const FullOutcome: FC<FullOutcomeProps> = (props) => {
         rel="noreferrer"
         className="font-medium text-primary inline-flex items-center gap-4"
       >
-        <span>Learn More</span>
+        <span>Learn more</span>
         <IconLink className="inline size-12" />
       </a>
     </p>

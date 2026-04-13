@@ -105,7 +105,7 @@ export const CreateGradientStrategyForm: FC<FormProps> = (props) => {
               onClick={addToCart}
               data-testid="add-strategy-to-cart"
             >
-              Add to Cart
+              Add to cart
             </Button>
           )}
           <Button
@@ -118,7 +118,7 @@ export const CreateGradientStrategyForm: FC<FormProps> = (props) => {
             loadingChildren={loadingText}
             data-testid="create-strategy"
           >
-            Create Strategy
+            Create strategy
           </Button>
         </>
       )}
@@ -133,7 +133,7 @@ export const CreateGradientStrategyForm: FC<FormProps> = (props) => {
           loadingChildren={loadingText}
           onClick={openConnect}
         >
-          Connect Wallet
+          Connect wallet
         </Button>
       )}
     </form>

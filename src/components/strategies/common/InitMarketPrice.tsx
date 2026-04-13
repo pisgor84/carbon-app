@@ -31,7 +31,7 @@ export const EditMarketPrice: FC<Props> = (props) => {
       type="button"
     >
       <IconEdit className="size-16" />
-      <span>Edit Market Price</span>
+      <span>Edit market price</span>
     </button>
   );
 
@@ -162,7 +162,7 @@ export const InitMarketPrice = (props: FieldProps) => {
         type="submit"
         data-testid="set-overlapping-price"
       >
-        Set New Market Price
+        Set new market price
       </button>
     </form>
   );
