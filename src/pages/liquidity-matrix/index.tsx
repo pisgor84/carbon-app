@@ -41,12 +41,13 @@ import { useWagmi } from 'libs/wagmi';
 import { lsService } from 'services/localeStorage';
 import { isZero } from 'components/strategies/common/utils';
 import './index.css';
-import { getAddress, TransactionRequest } from 'ethers';
+import { getAddress, parseUnits, TransactionRequest } from 'ethers';
 import { carbonSDK } from 'libs/sdk';
 import config from 'config';
 import { useBatchTransaction } from 'libs/wagmi/batch-transaction';
 
 const batcher = config.addresses.carbon.batcher;
+const controller = config.addresses.carbon.carbonController;
 
 const animateLeaving = (address: string, options: { isLast: boolean }) => {
   const elements = document.querySelectorAll(`[data-on-leave="${address}"]`);
@@ -304,19 +305,35 @@ export const LiquidityMatrixPage = () => {
         const canBatch = await canBatchTransactions(user);
         const transactions: TransactionRequest[] = [];
         if (canBatch && strategies.length < 10) {
-          const getTransactions = strategies.map((strategy) => {
-            return carbonSDK.createBuySellStrategy(
-              strategy.base,
-              strategy.quote,
-              strategy.buyMin,
-              strategy.buyMarginal || strategy.buyMax,
-              strategy.buyMax,
-              strategy.buyBudget,
-              strategy.sellMin,
-              strategy.sellMarginal || strategy.sellMax,
-              strategy.sellMax,
-              strategy.sellBudget,
+          const getTransactions = strategies.map(async (s) => {
+            const tx = await carbonSDK.createBuySellStrategy(
+              s.base,
+              s.quote,
+              s.buyMin,
+              s.buyMarginal || s.buyMax,
+              s.buyMax,
+              s.buyBudget,
+              s.sellMin,
+              s.sellMarginal || s.sellMax,
+              s.sellMax,
+              s.sellBudget,
             );
+            const baseDecimals = getTokenById(s.base)?.decimals;
+            const quoteDecimals = getTokenById(s.quote)?.decimals;
+            tx.customData = {
+              spender: controller,
+              assets: [
+                {
+                  address: s.base,
+                  rawAmount: parseUnits(s.sellBudget, baseDecimals).toString(),
+                },
+                {
+                  address: s.quote,
+                  rawAmount: parseUnits(s.buyBudget, quoteDecimals).toString(),
+                },
+              ],
+            };
+            return tx;
           });
           const allTxs = await Promise.all(getTransactions);
           allTxs.forEach((tx) => transactions.push(tx));
@@ -335,6 +352,25 @@ export const LiquidityMatrixPage = () => {
           }));
           const unsignedTx =
             await carbonSDK.batchCreateBuySellStrategies(params);
+
+          const record: Record<string, bigint> = {};
+          for (const s of strategies) {
+            const baseDecimals = getTokenById(s.base)?.decimals;
+            const sellAmount = parseUnits(s.sellBudget, baseDecimals);
+            record[s.base] ||= BigInt(0);
+            record[s.base] += sellAmount;
+            const quoteDecimals = getTokenById(s.quote)?.decimals;
+            const buyAmount = parseUnits(s.buyBudget, quoteDecimals);
+            record[s.quote] ||= BigInt(0);
+            record[s.quote] += buyAmount;
+          }
+          unsignedTx.customData = {
+            spender: batcher,
+            assets: Object.entries(record).map(([address, amount]) => ({
+              address: address,
+              rawAmount: amount.toString(),
+            })),
+          };
           transactions.push(unsignedTx);
         }
         setDisabled(true);
