@@ -107,7 +107,6 @@ export const useEditToDisposableSell = (strategy: AnyStrategy) => {
         cache.invalidateQueries({
           queryKey: [
             QueryKey.strategyAll(),
-            QueryKey.strategiesByUser(user),
             QueryKey.balance(user!, strategy.base.address),
             QueryKey.balance(user!, strategy.quote.address),
           ],

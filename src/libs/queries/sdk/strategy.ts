@@ -1,11 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { isAddress, getAddress, parseUnits } from 'ethers';
+import { getAddress, parseUnits } from 'ethers';
 import { useWagmi } from 'libs/wagmi';
 import { Token } from 'libs/tokens';
 import { QueryKey } from 'libs/queries/queryKey';
 import { SafeDecimal } from 'libs/safedecimal';
 import config from 'config';
-import { ONE_DAY_IN_MS } from 'utils/time';
 import { useTokens } from 'hooks/useTokens';
 import { EncodedStrategyBNStr, StrategyUpdate } from '@bancor/carbon-sdk';
 import { MarginalPriceOptions } from '@bancor/carbon-sdk/strategy-management';
@@ -24,6 +23,7 @@ import {
 } from 'components/strategies/common/utils';
 import { StrategyAPI, StrategyOrderAPI } from 'libs/queries/extApi/strategy';
 import { carbonApi } from 'services/carbonApi';
+import { useMemo } from 'react';
 
 const buildStrategyFromAPI = (
   s: StrategyAPI,
@@ -92,44 +92,36 @@ export const useGetAllStrategies = (options: { enabled: boolean }) => {
 };
 
 export const useGetStrategyList = (ids: string[]) => {
-  const { data: strategies } = useGetAllStrategies({ enabled: true });
-  return useQuery<AnyStrategy[]>({
-    queryKey: QueryKey.strategyList(ids),
-    queryFn: () => strategies!.filter((strategy) => ids.includes(strategy.id)),
-    enabled: !strategies,
-    retry: false,
-  });
+  const query = useGetAllStrategies({ enabled: true });
+  return useMemo(() => {
+    return {
+      ...query,
+      data: query.data?.filter((strategy) => ids.includes(strategy.id)),
+    };
+  }, [query, ids]);
 };
 
 export const useGetUserStrategies = ({ user }: { user?: string }) => {
-  const { data: strategies } = useGetAllStrategies({ enabled: true });
-  const { data: ensAddress, isPending } = useGetAddressFromEns(user || '');
+  const query = useGetAllStrategies({ enabled: true });
+  const { data: ensAddress } = useGetAddressFromEns(user || '');
   const address: string = ensAddress || user || '';
-
-  const isValidAddress = isAddress(address);
-  const isZeroAddress = address === config.addresses.tokens.ZERO;
-
-  return useQuery({
-    queryKey: QueryKey.strategiesByUser(address),
-    queryFn: async () => {
-      if (!isValidAddress || isZeroAddress) return [];
-      const owner = getAddress(address);
-      return strategies!.filter((s) => s.owner === owner);
-    },
-    enabled: !!address && !!strategies && !isPending,
-    retry: false,
-  });
+  return useMemo(() => {
+    const owner = getAddress(address);
+    return {
+      ...query,
+      data: query.data?.filter((s) => s.owner === owner),
+    };
+  }, [query, address]);
 };
 
 export const useGetStrategy = (id: string) => {
-  const { isPending } = useTokens();
-  const { data: strategies } = useGetAllStrategies({ enabled: true });
-  return useQuery<AnyStrategy | undefined>({
-    queryKey: QueryKey.strategy(id),
-    queryFn: () => strategies!.find((strategy) => strategy.id === id),
-    enabled: strategies && !isPending,
-    retry: false,
-  });
+  const query = useGetAllStrategies({ enabled: true });
+  return useMemo(() => {
+    return {
+      ...query,
+      data: query.data?.find((strategy) => strategy.id === id),
+    };
+  }, [query, id]);
 };
 
 interface PropsPair {
@@ -138,39 +130,32 @@ interface PropsPair {
 }
 
 export const useGetPairStrategies = (pair?: PropsPair) => {
-  const { data: strategies } = useGetAllStrategies({ enabled: true });
-
-  return useQuery<AnyStrategy[]>({
-    queryKey: QueryKey.strategiesByPair(pair?.base, pair?.quote),
-    queryFn: () => {
-      const base = getAddress(pair!.base!);
-      const quote = getAddress(pair!.quote!);
-      return strategies!.filter((s) => {
+  const query = useGetAllStrategies({ enabled: true });
+  return useMemo(() => {
+    const base = getAddress(pair!.base!);
+    const quote = getAddress(pair!.quote!);
+    return {
+      ...query,
+      data: query.data?.filter((s) => {
         return s.base.address === base && s.quote.address === quote;
-      });
-    },
-    enabled: !!strategies && !!pair?.base && !!pair.quote,
-    retry: false,
-  });
+      }),
+    };
+  }, [pair, query]);
 };
 
 export const useTokenStrategies = (token?: string) => {
-  const { data: strategies } = useGetAllStrategies({ enabled: true });
-
-  return useQuery<AnyStrategy[]>({
-    queryKey: QueryKey.strategiesByToken(token),
-    queryFn: () => {
-      const address = getAddress(token!);
-      return strategies!.filter((s) => {
+  const query = useGetAllStrategies({ enabled: true });
+  return useMemo(() => {
+    const address = getAddress(token!);
+    return {
+      ...query,
+      data: query.data?.filter((s) => {
         if (s.base.address === address) return true;
         if (s.quote.address === address) return true;
         return false;
-      });
-    },
-    enabled: !!strategies && !!token,
-    staleTime: ONE_DAY_IN_MS,
-    retry: false,
-  });
+      }),
+    };
+  }, [token, query]);
 };
 
 // WRITE
@@ -261,10 +246,6 @@ export const useUpdateStrategyQuery = (strategy: AnyStrategy) => {
       if (!strategy.encoded) {
         throw new Error('No encoded found on the strategy');
       }
-      console.log({
-        strategy,
-        updates,
-      });
       const unsignedTx = await carbonSDK.updateStrategy(
         strategy.id,
         strategy.encoded,

@@ -43,13 +43,9 @@ export const usePauseStrategy = () => {
         await tx.wait();
 
         setTimeout(() => {
-          const keys = [
-            QueryKey.strategyAll(),
-            QueryKey.strategiesByUser(user),
-          ];
-          for (const queryKey of keys) {
-            cache.refetchQueries({ queryKey });
-          }
+          cache.refetchQueries({
+            queryKey: QueryKey.strategyAll(),
+          });
         }, 3000);
         console.log('tx confirmed');
         successEventsCb?.();

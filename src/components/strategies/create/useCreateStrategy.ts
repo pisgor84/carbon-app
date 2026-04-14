@@ -79,7 +79,6 @@ export const useCreateStrategy = (props: Props) => {
             setTimeout(() => {
               const keys = [
                 QueryKey.strategyAll(),
-                QueryKey.strategiesByUser(user),
                 QueryKey.balance(user, base.address),
                 QueryKey.balance(user, quote.address),
               ];

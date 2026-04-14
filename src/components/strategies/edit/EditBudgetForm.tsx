@@ -78,7 +78,6 @@ export const EditBudgetForm: FC<Props> = (props) => {
         setTimeout(() => {
           const keys = [
             QueryKey.strategyAll(),
-            QueryKey.strategiesByUser(user),
             QueryKey.balance(user!, strategy.base.address),
             QueryKey.balance(user!, strategy.quote.address),
           ];
