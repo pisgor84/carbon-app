@@ -117,7 +117,16 @@ export const InitMarketPrice = (props: FieldProps) => {
       data-testid="user-price-form"
       onSubmit={setPrice}
     >
-      {!externalPrice && <SetPriceText base={base} quote={quote} />}
+      {!externalPrice ? (
+        <SetPriceText base={base} quote={quote} />
+      ) : (
+        <h3>
+          Set Market Price{' '}
+          <span className="text-main-0/60">
+            ({quote.symbol} per 1 {base.symbol})
+          </span>
+        </h3>
+      )}
       <InputLimit
         price={localPrice || ''}
         setPrice={changePrice}
