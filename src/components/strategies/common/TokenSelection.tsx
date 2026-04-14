@@ -14,6 +14,20 @@ interface Props {
   quote: Token;
 }
 
+// Keep none price/budget related searches. Should be removed if we split into one page per link
+function copyTradeSearch(search: any) {
+  const copy: any = {};
+  for (const key of ['limit', 'settings', 'direction']) {
+    if (key in search) {
+      copy[key] = search[key];
+    }
+  }
+  if (search['preset'] === 'Infinity') {
+    copy['preset'] = 'Infinity';
+  }
+  return copy;
+}
+
 export const TokenSelection: FC<Props> = ({ url, base, quote }) => {
   const navigate = useNavigate({ from: url });
   const { openModal } = useModal();
@@ -33,6 +47,7 @@ export const TokenSelection: FC<Props> = ({ url, base, quote }) => {
 
       navigate({
         search: (s) => ({
+          ...copyTradeSearch(s),
           ...tokens,
           chartStart: s.chartStart,
           chartEnd: s.chartEnd,
@@ -54,6 +69,7 @@ export const TokenSelection: FC<Props> = ({ url, base, quote }) => {
       navigate({
         search: (s) => {
           return {
+            ...copyTradeSearch(s),
             base: quote.address,
             quote: base.address,
             chartStart: s.chartStart,
