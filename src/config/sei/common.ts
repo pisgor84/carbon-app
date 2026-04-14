@@ -13,7 +13,6 @@ const addresses = {
 
 const popularTokens = [
   addresses.SEI,
-  addresses.USDT,
   addresses.USDC,
   addresses.syUSD,
   addresses.WETH,
@@ -62,7 +61,6 @@ export const commonConfig: AppConfig = {
   popularPairs: [
     [addresses.SEI, addresses.WSEI],
     [addresses.SEI, addresses.USDC],
-    [addresses.SEI, addresses.USDT],
   ],
   popularTokens: popularTokens,
   addresses: {
