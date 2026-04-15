@@ -35,7 +35,7 @@ const types = [
         id: 'fullRange',
         name: 'Full Range',
         to: '/trade/overlapping' as const,
-        search: { fullRange: true },
+        search: { preset: 'Infinity' },
         icon: <IconOverlapping className="hidden md:block size-20" />,
       },
       {
