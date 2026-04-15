@@ -27,7 +27,7 @@ const types = [
         icon: <IconMarket className="size-24" />,
       },
       {
-        name: 'Liquidity Position',
+        name: 'Liquidity position',
         to: '/trade/overlapping' as const,
         search: {},
         icon: <IconOverlapping className="size-24" />,
@@ -41,13 +41,13 @@ const types = [
       'Tailored trading options for greater precision and absolute price certainty',
     trades: [
       {
-        name: 'Limit Order',
+        name: 'Limit order',
         to: '/trade/disposable' as const,
         search: { settings: 'limit' as const },
         icon: <IconDisposable className="size-24" />,
       },
       {
-        name: 'Recurring Limit Orders',
+        name: 'Recurring limit orders',
         to: '/trade/recurring' as const,
         search: { buySettings: 'limit', sellSettings: 'limit' } as const,
         icon: <IconRecurring className="size-24" />,
@@ -61,13 +61,13 @@ const types = [
       'Customizable strategies for scaling, and automating buy low, sell high trades - unique to Carbon DeFi.',
     trades: [
       {
-        name: 'Range Order',
+        name: 'Range order',
         to: '/trade/disposable' as const,
         search: { settings: 'range' as const },
         icon: <IconRange className="size-24" />,
       },
       {
-        name: 'Recurring Range Orders',
+        name: 'Recurring range orders',
         to: '/trade/recurring' as const,
         icon: <IconRecurring className="size-24" />,
       },
