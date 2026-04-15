@@ -134,7 +134,7 @@ export const ActivityFilter: FC<ActivityFilterProps> = (props) => {
             ? `${actions.length} actions selected`
             : 'Filter actions'
         }
-        filterLabel="Search by Action"
+        filterLabel="Search by action"
         options={allActions.map((action) => (
           <Option key={action} value={action}>
             {activityActionName[action]}

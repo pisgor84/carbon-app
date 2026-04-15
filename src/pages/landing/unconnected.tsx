@@ -164,7 +164,7 @@ export const UnconnectedLandingPage = () => {
                 className="flex items-center gap-8"
               >
                 <span className="text-gradient gradient-direction-[90deg] font-medium">
-                  Explore Strategies
+                  Explore strategies
                 </span>
                 <ArrowCircleRightIcon className="size-24 fill-gradient stroke-gradient" />
               </Link>
