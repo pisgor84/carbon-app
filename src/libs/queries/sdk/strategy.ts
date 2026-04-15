@@ -119,7 +119,7 @@ export const useGetStrategy = (id: string) => {
   const query = useGetAllStrategies({ enabled: true });
   return useMemo(() => {
     if (!id) {
-      return { ...query, data: [] };
+      return { ...query, data: undefined };
     }
     return {
       ...query,
