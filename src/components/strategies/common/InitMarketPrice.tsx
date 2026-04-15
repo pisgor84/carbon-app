@@ -2,7 +2,7 @@ import { Token } from 'libs/tokens';
 import { FC, FormEvent, useId, useMemo, useState } from 'react';
 import { cn, roundSearchParam } from 'utils/helpers';
 import IconCoinGecko from 'assets/icons/coin-gecko.svg?react';
-import IconEdit from 'assets/icons/edit.svg?react';
+import EditSquareIcon from 'assets/icons/edit_square.svg?react';
 import { NewTabLink, useNavigate, useSearch } from 'libs/routing';
 import { DropdownMenu, MenuButtonProps } from 'components/common/dropdownMenu';
 import { useMarketPrice } from 'hooks/useMarketPrice';
@@ -30,7 +30,7 @@ export const EditMarketPrice: FC<Props> = (props) => {
       data-testid="edit-market-price"
       type="button"
     >
-      <IconEdit className="size-16" />
+      <EditSquareIcon className="size-16" />
       <span>Edit market price</span>
     </button>
   );
@@ -117,7 +117,16 @@ export const InitMarketPrice = (props: FieldProps) => {
       data-testid="user-price-form"
       onSubmit={setPrice}
     >
-      {!externalPrice && <SetPriceText base={base} quote={quote} />}
+      {!externalPrice ? (
+        <SetPriceText base={base} quote={quote} />
+      ) : (
+        <h3>
+          Set Market Price{' '}
+          <span className="text-main-0/60">
+            ({quote.symbol} per 1 {base.symbol})
+          </span>
+        </h3>
+      )}
       <InputLimit
         price={localPrice || ''}
         setPrice={changePrice}
@@ -189,7 +198,7 @@ const EditPriceText = () => (
       to="https://www.coingecko.com/"
     >
       <b>CoinGecko</b>
-      <IconCoinGecko className="size-10" />
+      <IconCoinGecko className="size-24" />
     </NewTabLink>
   </span>
 );
