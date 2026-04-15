@@ -106,6 +106,7 @@ export const useGetUserStrategies = ({ user }: { user?: string }) => {
   const { data: ensAddress } = useGetAddressFromEns(user || '');
   const address: string = ensAddress || user || '';
   return useMemo(() => {
+    if (!address) return { ...query, data: [] };
     const owner = getAddress(address);
     return {
       ...query,
@@ -117,6 +118,9 @@ export const useGetUserStrategies = ({ user }: { user?: string }) => {
 export const useGetStrategy = (id: string) => {
   const query = useGetAllStrategies({ enabled: true });
   return useMemo(() => {
+    if (!id) {
+      return { ...query, data: [] };
+    }
     return {
       ...query,
       data: query.data?.find((strategy) => strategy.id === id),
@@ -132,8 +136,11 @@ interface PropsPair {
 export const useGetPairStrategies = (pair?: PropsPair) => {
   const query = useGetAllStrategies({ enabled: true });
   return useMemo(() => {
-    const base = getAddress(pair!.base!);
-    const quote = getAddress(pair!.quote!);
+    if (!pair?.base || !pair?.quote) {
+      return { ...query, data: [] };
+    }
+    const base = getAddress(pair.base);
+    const quote = getAddress(pair.quote);
     return {
       ...query,
       data: query.data?.filter((s) => {
@@ -146,7 +153,10 @@ export const useGetPairStrategies = (pair?: PropsPair) => {
 export const useTokenStrategies = (token?: string) => {
   const query = useGetAllStrategies({ enabled: true });
   return useMemo(() => {
-    const address = getAddress(token!);
+    if (!token) {
+      return { ...query, data: [] };
+    }
+    const address = getAddress(token);
     return {
       ...query,
       data: query.data?.filter((s) => {
