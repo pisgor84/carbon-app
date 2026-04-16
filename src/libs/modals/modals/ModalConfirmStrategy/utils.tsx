@@ -24,7 +24,7 @@ export const getModalDataByType = (
         title: 'Are you sure you would like to pause your strategy?',
         content:
           'This will prevent your strategy from being traded against, however you will retain access to any associated funds.',
-        actionButton: 'Pause Strategy',
+        actionButton: 'Pause strategy',
       };
 
     case 'delete':
@@ -42,7 +42,7 @@ export const getModalDataByType = (
             </div>
           </div>
         ),
-        actionButton: 'Delete Strategy',
+        actionButton: 'Delete strategy',
         variant: 'error',
       };
   }

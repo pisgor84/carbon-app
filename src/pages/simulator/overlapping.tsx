@@ -43,7 +43,7 @@ export const SimulatorInputOverlappingPage = () => {
   const noBudgetByOrders =
     Number(orders.buy.budget) + Number(orders.sell.budget) <= 0;
   const noBudgetText =
-    !emptyHistory && noBudgetByOrders && 'Please add Sell and/or Buy budgets';
+    !emptyHistory && noBudgetByOrders && 'Please add sell and/or buy budgets';
   const btnDisabled = emptyHistory || noBudgetByOrders;
 
   const submit = useCallback(
@@ -168,7 +168,7 @@ export const SimulatorInputOverlappingPage = () => {
           disabled={btnDisabled}
           className="btn-main-gradient text-16 py-12"
         >
-          {loadingText || noBudgetText || 'Start Simulation'}
+          {loadingText || noBudgetText || 'Start simulation'}
         </button>
       </form>
     </>

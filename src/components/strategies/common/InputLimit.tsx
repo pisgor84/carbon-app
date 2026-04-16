@@ -127,7 +127,7 @@ export const InputLimit: FC<InputLimitProps> = (props) => {
               type="button"
               onClick={setMarket}
             >
-              Use Market
+              Use market
             </button>
           )}
         </div>

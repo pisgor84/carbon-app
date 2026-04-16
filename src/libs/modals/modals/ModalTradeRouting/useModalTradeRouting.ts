@@ -111,7 +111,7 @@ export const useModalTradeRouting = ({
     new SafeDecimal(sourceBalance).lt(
       isTradeBySource ? sourceInput : calcMaxInput(sourceInput),
     );
-  const errorMsg = insufficientBalance ? 'Insufficient Balance' : '';
+  const errorMsg = insufficientBalance ? 'Insufficient balance' : '';
   const onCancel = useCallback(() => {
     closeModal(id);
   }, [closeModal, id]);
@@ -119,7 +119,7 @@ export const useModalTradeRouting = ({
   const disabledCTA =
     !selectedIDs.length || isPending || isError || insufficientBalance;
 
-  const buttonText = user ? 'Confirm' : 'Connect Wallet';
+  const buttonText = user ? 'Confirm' : 'Connect wallet';
 
   return {
     selected,

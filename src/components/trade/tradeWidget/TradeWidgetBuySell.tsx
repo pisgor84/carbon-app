@@ -318,7 +318,7 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
   }, [query.error]);
 
   const ctaButtonText = (() => {
-    if (!user) return 'Connect Wallet';
+    if (!user) return 'Connect wallet';
     if (isBuy) return `Buy ${target.symbol}`;
     return `Sell ${source.symbol}`;
   })();

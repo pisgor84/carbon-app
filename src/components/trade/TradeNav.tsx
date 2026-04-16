@@ -33,7 +33,7 @@ const types = [
       },
       {
         id: 'fullRange',
-        name: 'Full Range',
+        name: 'Full range',
         to: '/trade/overlapping' as const,
         search: { preset: 'Infinity' },
         icon: <IconOverlapping className="hidden md:block size-20" />,
@@ -53,21 +53,21 @@ const types = [
     strategies: [
       {
         id: 'limitBuy',
-        name: 'Limit Buy',
+        name: 'Limit buy',
         to: '/trade/disposable' as const,
         search: { settings: 'limit' as const, direction: 'buy' as const },
         icon: <IconDisposable className="hidden md:block size-20" />,
       },
       {
         id: 'limitSell',
-        name: 'Limit Sell',
+        name: 'Limit sell',
         to: '/trade/disposable' as const,
         search: { settings: 'limit' as const },
         icon: <IconDisposable className="hidden md:block size-20" />,
       },
       {
         id: 'recurringLimit',
-        name: 'Recurring Limit',
+        name: 'Recurring limit',
         to: '/trade/recurring' as const,
         search: { buySettings: 'limit', sellSettings: 'limit' } as const,
         icon: <IconRecurring className="hidden md:block size-20" />,
@@ -80,21 +80,21 @@ const types = [
     strategies: [
       {
         id: 'rangeBuy',
-        name: 'Range Buy',
+        name: 'Range buy',
         to: '/trade/disposable' as const,
         search: { settings: 'range' as const, direction: 'buy' as const },
         icon: <IconRange className="hidden md:block size-20" />,
       },
       {
         id: 'rangeSell',
-        name: 'Range Sell',
+        name: 'Range sell',
         to: '/trade/disposable' as const,
         search: { settings: 'range' as const },
         icon: <IconRange className="hidden md:block size-20" />,
       },
       {
         id: 'recurringRange',
-        name: 'Recurring Range',
+        name: 'Recurring range',
         to: '/trade/recurring' as const,
         search: { buySettings: 'range', sellSettings: 'range' } as const,
         icon: <IconRecurring className="hidden md:block size-20" />,

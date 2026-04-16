@@ -226,7 +226,7 @@ export const Combobox: FC<ComboboxProps> = (props) => {
                 onClick={reset}
                 className="btn text-12 font-medium rounded-2xl p-8"
               >
-                Reset Filter
+                Reset filter
               </button>
               <div
                 role="listbox"

@@ -423,7 +423,7 @@ export const LiquidityMatrixPage = () => {
                       set({ basePrice: baseTokenPrice.toString() })
                     }
                   >
-                    Use Market
+                    Use market
                   </button>
                 )}
               </div>
@@ -683,7 +683,7 @@ const PairForm: FC<PairFormProps> = (props) => {
                 type="button"
                 onClick={() => update({ price: quotePrice.toString() })}
               >
-                Use Market
+                Use market
               </button>
             )}
           </div>
@@ -899,7 +899,7 @@ const StrategyRow: FC<StrategyProps> = ({ base, spread, strategy, clear }) => {
     return isAwaiting || isProcessing;
   })();
   const createText = (() => {
-    if (!user) return 'Connect Wallet';
+    if (!user) return 'Connect wallet';
     if (isAwaiting) return 'Waiting...';
     if (isProcessing) return 'Processing';
     return 'Create';
@@ -981,7 +981,7 @@ const StrategyItem: FC<StrategyProps> = ({ base, spread, strategy, clear }) => {
     return isAwaiting || isProcessing;
   })();
   const createText = (() => {
-    if (!user) return 'Connect Wallet';
+    if (!user) return 'Connect wallet';
     if (isAwaiting) return 'Waiting...';
     if (isProcessing) return 'Processing';
     return 'Create';

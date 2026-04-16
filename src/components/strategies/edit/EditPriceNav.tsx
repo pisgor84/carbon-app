@@ -8,7 +8,7 @@ const links = [
   {
     id: 'overlapping' as const,
     type: 'Essentials',
-    label: 'Liquidity Position',
+    label: 'Liquidity position',
     to: '/strategies/edit/$strategyId/prices/overlapping',
     svg: <IconOverlapping className="hidden md:block size-20" />,
   },

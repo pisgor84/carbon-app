@@ -26,11 +26,11 @@ export type StrategyFilter = {
 };
 
 export const strategySort = {
-  recent: 'Recently Created',
-  old: 'Oldest Created',
+  recent: 'Recently created',
+  old: 'Oldest created',
   pairAsc: 'Pair (A->Z)',
   pairDesc: 'Pair (Z->A)',
-  totalBudgetDesc: 'Total Budget',
+  totalBudgetDesc: 'Total budget',
   trades: 'Trades',
 };
 

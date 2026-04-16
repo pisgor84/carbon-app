@@ -6,7 +6,7 @@ const items = [
   {
     id: 'overlapping',
     type: 'Essentials',
-    label: 'Liquidity Position',
+    label: 'Liquidity position',
     to: 'overlapping',
     search: {},
     svg: <IconOverlappingStrategy className="hidden md:block size-20" />,
@@ -14,7 +14,7 @@ const items = [
   {
     id: 'recurring-range',
     type: 'Advanced',
-    label: 'Recurring Range',
+    label: 'Recurring range',
     to: 'recurring',
     search: {},
     svg: <IconTwoRanges className="hidden md:block size-20" />,

@@ -68,7 +68,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
   if (!isGradient && !isPaused(strategy)) {
     items.push({
       id: 'duplicateStrategy',
-      name: 'Duplicate Strategy',
+      name: 'Duplicate strategy',
       action: () => {
         if (isFullRangeStrategy(base, quote, buy, sell)) {
           duplicate(strategy);
@@ -135,7 +135,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
   if (!isOwn && type !== 'wallet') {
     items.push({
       id: 'walletOwner',
-      name: "View Owner's Strategies",
+      name: "View owner's strategies",
       action: () => {
         navigate({
           to: '/explore',
@@ -149,7 +149,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
   if (type === 'wallet') {
     items.push({
       id: 'explorePair',
-      name: 'Explore Pair',
+      name: 'Explore pair',
       action: () => {
         const slug = toPairSlug(strategy.base, strategy.quote);
         navigate({
@@ -166,7 +166,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
 
       items.push({
         id: 'editPrices',
-        name: 'Edit Prices',
+        name: 'Edit prices',
         action: () => {
           navigate({
             to: editPrices.to,
@@ -181,7 +181,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
       items.push(0);
       items.push({
         id: 'depositFunds',
-        name: 'Deposit Funds',
+        name: 'Deposit funds',
         action: () => {
           navigate({
             to: deposit.to,
@@ -194,7 +194,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
       if (strategy.status !== 'noBudget') {
         items.push({
           id: 'withdrawFunds',
-          name: 'Withdraw Funds',
+          name: 'Withdraw funds',
           action: () => {
             openModal('confirmWithdrawStrategy', { strategy });
           },
@@ -208,7 +208,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
     if (strategy.status === 'active') {
       items.push({
         id: 'pauseStrategy',
-        name: 'Pause Strategy',
+        name: 'Pause strategy',
         action: () => {
           openModal('confirmPauseStrategy', { strategy });
         },
@@ -219,7 +219,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
       const renew = getEditPricesPage(strategy, 'renew');
       items.push({
         id: 'renewStrategy',
-        name: 'Renew Strategy',
+        name: 'Renew strategy',
         action: () => {
           navigate({
             to: renew.to,
@@ -232,7 +232,7 @@ export const StrategyBlockManage: FC<Props> = (props) => {
 
     items.push({
       id: 'deleteStrategy',
-      name: 'Withdraw & Delete',
+      name: 'Withdraw & delete',
       action: () => {
         openModal('confirmDeleteStrategy', { strategy });
       },
