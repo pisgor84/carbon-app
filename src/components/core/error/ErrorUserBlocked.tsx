@@ -1,7 +1,7 @@
 import { useWagmi } from 'libs/wagmi';
 import { NewTabLink, externalLinks } from 'libs/routing';
 import config from 'config';
-import { MainError } from './ErrorSDKStartSync';
+import { MainError } from './MainError';
 
 export const ErrorUserBlocked = () => {
   const { disconnect } = useWagmi();

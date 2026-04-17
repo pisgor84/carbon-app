@@ -6,7 +6,7 @@ import { FC, ReactNode } from 'react';
 
 interface Props {
   title: string;
-  description: string;
+  description: ReactNode;
   children?: ReactNode;
 }
 
@@ -19,7 +19,11 @@ export const MainError: FC<Props> = ({ title, description, children }) => {
         </div>
         <hgroup className="grid gap-24">
           <h2 className="text-24">{title}</h2>
-          <p className="text-main-0/80">{description}</p>
+          {typeof description === 'string' ? (
+            <p className="text-main-0/80">{description}</p>
+          ) : (
+            description
+          )}
         </hgroup>
         {children || <DefaultAction />}
       </article>
