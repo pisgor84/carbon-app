@@ -1,4 +1,4 @@
-import { MainError } from './ErrorSDKStartSync';
+import { MainError } from './MainError';
 
 export const ErrorNetworkConnection = () => {
   return (

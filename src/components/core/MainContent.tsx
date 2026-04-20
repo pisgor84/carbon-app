@@ -5,7 +5,7 @@ import { ErrorNetworkConnection } from 'components/core/error/ErrorNetworkConnec
 import { useTokens } from 'hooks/useTokens';
 import { ErrorTokenList } from 'components/core/error/ErrorTokenList';
 import { useCarbonInit } from 'libs/sdk/context';
-import { MainError } from 'components/core/error/ErrorSDKStartSync';
+import { MainError } from 'components/core/error/MainError';
 import { carbonEvents } from 'services/events';
 import { ErrorUserBlocked } from 'components/core/error/ErrorUserBlocked';
 import {
