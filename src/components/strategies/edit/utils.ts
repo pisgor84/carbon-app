@@ -104,13 +104,14 @@ export const useEditToDisposableSell = (strategy: AnyStrategy) => {
         if (!tx) return;
         console.log('tx hash', tx.hash);
         await tx.wait();
-        cache.invalidateQueries({
-          queryKey: [
-            QueryKey.strategyAll(),
-            QueryKey.balance(user!, strategy.base.address),
-            QueryKey.balance(user!, strategy.quote.address),
-          ],
-        });
+        const keys = [
+          QueryKey.strategyAll(),
+          QueryKey.balance(user!, strategy.base.address),
+          QueryKey.balance(user!, strategy.quote.address),
+        ];
+        for (const queryKey of keys) {
+          cache.invalidateQueries({ queryKey });
+        }
       },
       onError: (e) => {
         console.error('update mutation failed', e);

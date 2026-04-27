@@ -123,12 +123,14 @@ export const DebugCreateStrategy = () => {
       try {
         await createMutation.mutateAsync(strategy);
         await wait(interval * 1000);
-        await queryClient.invalidateQueries({
-          queryKey: QueryKey.balance(user, base.address),
-        });
-        await queryClient.invalidateQueries({
-          queryKey: QueryKey.balance(user, quote.address),
-        });
+        const keys = [
+          QueryKey.strategyAll(),
+          QueryKey.balance(user, base.address),
+          QueryKey.balance(user, quote.address),
+        ];
+        for (const queryKey of keys) {
+          queryClient.invalidateQueries({ queryKey });
+        }
         console.log('created strategy', strategy.base, strategy.quote);
       } catch (e) {
         console.error(
