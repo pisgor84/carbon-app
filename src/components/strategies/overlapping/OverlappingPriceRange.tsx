@@ -62,7 +62,7 @@ export const OverlappingPriceRange: FC<Props> = (props) => {
                     onClick={() => setMin(marketPrice.toString())}
                     data-testid="market-price-min"
                   >
-                    Use Market
+                    Use market
                   </button>
                 )}
               </header>
@@ -81,7 +81,7 @@ export const OverlappingPriceRange: FC<Props> = (props) => {
                     onClick={() => setMax(marketPrice.toString())}
                     data-testid="market-price-max"
                   >
-                    Use Market
+                    Use market
                   </button>
                 )}
               </header>

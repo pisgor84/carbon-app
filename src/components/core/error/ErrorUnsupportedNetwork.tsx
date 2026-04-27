@@ -1,5 +1,5 @@
 import { useWagmi } from 'libs/wagmi';
-import { MainError } from './ErrorSDKStartSync';
+import { MainError } from './MainError';
 import config from 'config';
 
 export const ErrorUnsupportedNetwork = () => {

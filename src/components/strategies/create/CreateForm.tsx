@@ -108,7 +108,7 @@ export const CreateForm: FC<FormProps> = (props) => {
                 onClick={addToCart}
                 data-testid="add-strategy-to-cart"
               >
-                Add to Cart
+                Add to cart
               </Button>
             )}
             <Button
@@ -132,7 +132,7 @@ export const CreateForm: FC<FormProps> = (props) => {
             loadingChildren={loadingChildren}
             onClick={openConnect}
           >
-            Connect Wallet
+            Connect wallet
           </Button>
         )}
       </footer>

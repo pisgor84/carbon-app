@@ -144,7 +144,7 @@ export const GradientPriceRange: FC<Props> = (props) => {
                 onClick={setStartMarket}
                 data-testid="market-start-price"
               >
-                Use Market
+                Use market
               </button>
             )}
           </header>
@@ -187,7 +187,7 @@ export const GradientPriceRange: FC<Props> = (props) => {
                 onClick={setEndMarket}
                 data-testid="market-end-price"
               >
-                Use Market
+                Use market
               </button>
             )}
           </header>

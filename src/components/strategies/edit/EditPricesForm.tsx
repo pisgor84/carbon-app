@@ -39,10 +39,10 @@ const notifKey: Record<EditTypes, keyof NotificationSchema> = {
 };
 
 const submitText: Record<EditTypes, string> = {
-  renew: 'Renew Strategy',
-  editPrices: 'Confirm Changes',
-  deposit: 'Confirm Deposit',
-  withdraw: 'Confirm Withdraw',
+  renew: 'Renew strategy',
+  editPrices: 'Confirm changes',
+  deposit: 'Confirm deposit',
+  withdraw: 'Confirm withdraw',
 };
 
 const getFieldsToUpdate = (

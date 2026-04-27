@@ -31,7 +31,7 @@ export default function ModalWithdrawOrDelete({
           onDelete();
         }}
       >
-        Withdraw and Delete
+        Withdraw and delete
       </button>
       <button
         className="btn-on-surface"
@@ -40,7 +40,7 @@ export default function ModalWithdrawOrDelete({
           onWithdraw();
         }}
       >
-        Withdraw Only
+        Withdraw only
       </button>
     </Modal>
   );

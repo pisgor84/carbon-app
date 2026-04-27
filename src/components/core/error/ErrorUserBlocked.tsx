@@ -1,7 +1,7 @@
 import { useWagmi } from 'libs/wagmi';
 import { NewTabLink, externalLinks } from 'libs/routing';
 import config from 'config';
-import { MainError } from './ErrorSDKStartSync';
+import { MainError } from './MainError';
 
 export const ErrorUserBlocked = () => {
   const { disconnect } = useWagmi();
@@ -16,7 +16,7 @@ export const ErrorUserBlocked = () => {
           to={externalLinks.treasuryGov}
           className="w-full btn-on-surface text-14 "
         >
-          Learn More
+          Learn more
         </NewTabLink>
         <button className="btn-on-surface text-14 " onClick={disconnect}>
           Logout
