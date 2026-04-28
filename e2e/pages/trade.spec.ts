@@ -4,7 +4,6 @@ import { DebugDriver, setupLocalStorage } from '../utils/DebugDriver';
 import { TradeDriver } from '../utils/TradeDriver';
 import { navigateTo } from '../utils/operators';
 import { TokenApprovalDriver } from '../utils/TokenApprovalDriver';
-import { waitForTenderlyRpc } from '../utils/tenderly';
 import { TradeTestCase } from '../utils/trade/types';
 
 const testCases: TradeTestCase[] = [
@@ -134,7 +133,6 @@ test.describe('Trade', () => {
         await routing.close();
 
         await driver.submit();
-        await waitForTenderlyRpc(page);
 
         // Token approval
         await tokenApproval.checkApproval(
