@@ -108,11 +108,12 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
         tradeActionsWei: actionsWei,
         tradeActionsRes: actionsTokenRes,
         isTradeBySource,
-        onSuccess: () =>
+        onSuccess: () => {
           set({
             sourceInput: undefined,
             targetInput: undefined,
-          }),
+          });
+        },
         isBuy,
       });
     }
@@ -129,10 +130,6 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
 
   const { trade, calcMaxInput, isAwaiting } = useTradeAction({
     onSuccess: async (transactionHash: string) => {
-      set({
-        sourceInput: undefined,
-        targetInput: undefined,
-      });
       const network = await provider?.getNetwork();
       const event = {
         trade_direction: isBuy ? ('buy' as const) : ('sell' as const),
@@ -145,6 +142,10 @@ export const TradeWidgetBuySell = (props: TradeWidgetBuySellProps) => {
       };
       if (isBuy) carbonEvents.trade.tradeBuy(event);
       else carbonEvents.trade.tradeSell(event);
+      set({
+        sourceInput: undefined,
+        targetInput: undefined,
+      });
     },
   });
 

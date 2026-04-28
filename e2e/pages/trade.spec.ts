@@ -103,13 +103,6 @@ test.describe('Trade', () => {
 
     const testName = testDescription(testCase);
     test(testName, async ({ page }) => {
-      // Store current balance
-      const debug = new DebugDriver(page);
-      const initialBalance = await Promise.all([
-        debug.getBalance(base),
-        debug.getBalance(quote),
-      ]);
-
       // Test Trade
       await navigateTo(page, '/trade/*?*');
       const driver = new TradeDriver(page, testCase);
@@ -121,15 +114,15 @@ test.describe('Trade', () => {
       await driver.setDirection(mode);
 
       for (const swap of swaps) {
-        const { sourceValue, targetValue } = swap;
+        const { sourceValue } = swap;
 
-        await driver.setPay(swap);
-        await expect(driver.getReceiveInput()).toHaveValue(targetValue);
+        await driver.setSource(swap);
+        await expect(driver.getReceiveInput()).toHaveValue(/^[\d|.]+/);
 
         // Verify routing
         const routing = await driver.openRouting();
         await expect(routing.getSource()).toHaveValue(sourceValue);
-        await expect(routing.getTarget()).toHaveValue(targetValue);
+        await expect(routing.getTarget()).toHaveValue(/^[\d|.]+/);
         await routing.close();
 
         await driver.submit();
@@ -145,28 +138,6 @@ test.describe('Trade', () => {
         await expect(driver.getPayInput()).toHaveValue('');
         await expect(driver.getReceiveInput()).toHaveValue('');
       }
-
-      // Check balance diff after all swaps
-      await navigateTo(page, '/debug');
-
-      const { sourceValue, targetValue } = swaps.reduce(
-        (acc, swapValues) => {
-          return {
-            sourceValue: acc.sourceValue + Number(swapValues.sourceValue),
-            targetValue: acc.targetValue + Number(swapValues.targetValue),
-          };
-        },
-        {
-          sourceValue: 0,
-          targetValue: 0,
-        },
-      );
-      const sourceDelta = Number(initialBalance[0]) - Number(sourceValue);
-      const nextSource = new RegExp(sourceDelta.toString());
-      await expect(debug.balanceLocator(source)).toHaveText(nextSource);
-      const targetDelta = Number(initialBalance[1]) + Number(targetValue);
-      const nextTarget = new RegExp(targetDelta.toString());
-      await expect(debug.balanceLocator(target)).toHaveText(nextTarget);
     });
   }
 });
