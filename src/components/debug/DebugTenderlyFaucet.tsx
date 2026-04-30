@@ -7,7 +7,7 @@ import { FormEvent } from 'react';
 import { NATIVE_TOKEN_ADDRESS } from 'utils/tokens';
 import config from 'config';
 
-const TOKENS = FAUCET_TOKENS;
+const TOKENS = [...FAUCET_TOKENS];
 
 const gasToken = config.network.gasToken;
 TOKENS.push({
