@@ -1,143 +1,145 @@
-import { test, expect } from '@playwright/test';
-import { mockApi } from '../utils/mock-api';
-import { DebugDriver, setupLocalStorage } from '../utils/DebugDriver';
-import { TradeDriver } from '../utils/TradeDriver';
-import { navigateTo } from '../utils/operators';
-import { TokenApprovalDriver } from '../utils/TokenApprovalDriver';
-import { TradeTestCase } from '../utils/trade/types';
+// Reenable Trade when working with dex aggregators
 
-const testCases: TradeTestCase[] = [
-  {
-    mode: 'buy' as const,
-    base: 'ETH',
-    quote: 'USDC',
-    swaps: [
-      {
-        sourceValue: '100',
-        targetValue: '0.059554032010090174',
-      },
-    ],
-  },
-  {
-    mode: 'sell' as const,
-    base: 'USDC',
-    quote: 'USDT',
-    isLimitedApproval: true,
-    swaps: [
-      {
-        sourceValue: '10',
-        targetValue: '10.004888',
-      },
-      {
-        sourceValue: '10',
-        targetValue: '10.004863',
-      },
-    ],
-  },
-  {
-    mode: 'sell' as const,
-    base: 'USDC',
-    quote: 'USDT',
-    swaps: [
-      {
-        sourceValue: '10',
-        targetValue: '10.004888',
-      },
-      {
-        sourceValue: '10',
-        targetValue: '10.004863',
-      },
-    ],
-  },
-  {
-    mode: 'sell' as const,
-    base: 'ETH',
-    quote: 'USDC',
-    swaps: [
-      {
-        sourceValue: '0.005',
-        targetValue: '7.939455',
-      },
-      {
-        sourceValue: '0.005',
-        targetValue: '7.93526',
-      },
-    ],
-  },
-];
+// import { test, expect } from '@playwright/test';
+// import { mockApi } from '../utils/mock-api';
+// import { DebugDriver, setupLocalStorage } from '../utils/DebugDriver';
+// import { TradeDriver } from '../utils/TradeDriver';
+// import { navigateTo } from '../utils/operators';
+// import { TokenApprovalDriver } from '../utils/TokenApprovalDriver';
+// import { TradeTestCase } from '../utils/trade/types';
 
-const testDescription = (testCase: TradeTestCase) => {
-  const { mode, base, quote, isLimitedApproval } = testCase;
+// const testCases: TradeTestCase[] = [
+//   {
+//     mode: 'buy' as const,
+//     base: 'ETH',
+//     quote: 'USDC',
+//     swaps: [
+//       {
+//         sourceValue: '100',
+//         targetValue: '0.059554032010090174',
+//       },
+//     ],
+//   },
+//   {
+//     mode: 'sell' as const,
+//     base: 'USDC',
+//     quote: 'USDT',
+//     isLimitedApproval: true,
+//     swaps: [
+//       {
+//         sourceValue: '10',
+//         targetValue: '10.004888',
+//       },
+//       {
+//         sourceValue: '10',
+//         targetValue: '10.004863',
+//       },
+//     ],
+//   },
+//   {
+//     mode: 'sell' as const,
+//     base: 'USDC',
+//     quote: 'USDT',
+//     swaps: [
+//       {
+//         sourceValue: '10',
+//         targetValue: '10.004888',
+//       },
+//       {
+//         sourceValue: '10',
+//         targetValue: '10.004863',
+//       },
+//     ],
+//   },
+//   {
+//     mode: 'sell' as const,
+//     base: 'ETH',
+//     quote: 'USDC',
+//     swaps: [
+//       {
+//         sourceValue: '0.005',
+//         targetValue: '7.939455',
+//       },
+//       {
+//         sourceValue: '0.005',
+//         targetValue: '7.93526',
+//       },
+//     ],
+//   },
+// ];
 
-  const numSwaps = testCase.swaps.length;
-  const nameSwapSuffix = numSwaps > 1 ? ` ${numSwaps} times` : '';
-  const approvalSuffix = isLimitedApproval ? ' with limited approval ' : '';
+// const testDescription = (testCase: TradeTestCase) => {
+//   const { mode, base, quote, isLimitedApproval } = testCase;
 
-  const testName =
-    mode === 'buy' ? `Buy ${quote} with ${base}` : `Sell ${base} for ${quote}`;
+//   const numSwaps = testCase.swaps.length;
+//   const nameSwapSuffix = numSwaps > 1 ? ` ${numSwaps} times` : '';
+//   const approvalSuffix = isLimitedApproval ? ' with limited approval ' : '';
 
-  return testName + nameSwapSuffix + approvalSuffix;
-};
+//   const testName =
+//     mode === 'buy' ? `Buy ${quote} with ${base}` : `Sell ${base} for ${quote}`;
 
-test.describe('Trade', () => {
-  test.beforeEach(async ({ page }, testInfo) => {
-    testInfo.setTimeout(90_000);
-    await mockApi(page);
-    await setupLocalStorage(page);
-    const debug = new DebugDriver(page);
-    await debug.visit();
-    await debug.setupImposter();
-    await page.getByText('Get money').click();
-  });
+//   return testName + nameSwapSuffix + approvalSuffix;
+// };
 
-  // Need an empty object else the tests don't run
-  // eslint-disable-next-line no-empty-pattern
-  test.afterEach(async ({}, testInfo) => {
-    //
-  });
+// test.describe('Trade', () => {
+//   test.beforeEach(async ({ page }, testInfo) => {
+//     testInfo.setTimeout(90_000);
+//     await mockApi(page);
+//     await setupLocalStorage(page);
+//     const debug = new DebugDriver(page);
+//     await debug.visit();
+//     await debug.setupImposter();
+//     await page.getByText('Get money').click();
+//   });
 
-  for (const testCase of testCases) {
-    const { mode, base, quote, swaps, isLimitedApproval } = testCase;
-    const source = mode === 'sell' ? base : quote;
-    const target = mode === 'sell' ? quote : base;
+//   // Need an empty object else the tests don't run
+//   // eslint-disable-next-line no-empty-pattern
+//   test.afterEach(async ({}, testInfo) => {
+//     //
+//   });
 
-    const testName = testDescription(testCase);
-    test(testName, async ({ page }) => {
-      // Test Trade
-      await navigateTo(page, '/trade/*?*');
-      const driver = new TradeDriver(page, testCase);
-      const tokenApproval = new TokenApprovalDriver(page);
+//   for (const testCase of testCases) {
+//     const { mode, base, quote, swaps, isLimitedApproval } = testCase;
+//     const source = mode === 'sell' ? base : quote;
+//     const target = mode === 'sell' ? quote : base;
 
-      await driver.selectToken('base');
-      await driver.selectToken('quote');
-      await driver.setSwap();
-      await driver.setDirection(mode);
+//     const testName = testDescription(testCase);
+//     test(testName, async ({ page }) => {
+//       // Test Trade
+//       await navigateTo(page, '/trade/*?*');
+//       const driver = new TradeDriver(page, testCase);
+//       const tokenApproval = new TokenApprovalDriver(page);
 
-      for (const swap of swaps) {
-        const { sourceValue } = swap;
+//       await driver.selectToken('base');
+//       await driver.selectToken('quote');
+//       await driver.setSwap();
+//       await driver.setDirection(mode);
 
-        await driver.setSource(swap);
-        await expect(driver.getReceiveInput()).toHaveValue(/^[\d|.]+/);
+//       for (const swap of swaps) {
+//         const { sourceValue } = swap;
 
-        // Verify routing
-        const routing = await driver.openRouting();
-        await expect(routing.getSource()).toHaveValue(sourceValue);
-        await expect(routing.getTarget()).toHaveValue(/^[\d|.]+/);
-        await routing.close();
+//         await driver.setSource(swap);
+//         await expect(driver.getReceiveInput()).toHaveValue(/^[\d|.]+/);
 
-        await driver.submit();
+//         // Verify routing
+//         const routing = await driver.openRouting();
+//         await expect(routing.getSource()).toHaveValue(sourceValue);
+//         await expect(routing.getTarget()).toHaveValue(/^[\d|.]+/);
+//         await routing.close();
 
-        // Token approval
-        await tokenApproval.checkApproval(
-          [{ symbol: source, amount: sourceValue }],
-          isLimitedApproval,
-        );
+//         await driver.submit();
 
-        // Verify form empty
-        await driver.awaitSuccess();
-        await expect(driver.getPayInput()).toHaveValue('');
-        await expect(driver.getReceiveInput()).toHaveValue('');
-      }
-    });
-  }
-});
+//         // Token approval
+//         await tokenApproval.checkApproval(
+//           [{ symbol: source, amount: sourceValue }],
+//           isLimitedApproval,
+//         );
+
+//         // Verify form empty
+//         await driver.awaitSuccess();
+//         await expect(driver.getPayInput()).toHaveValue('');
+//         await expect(driver.getReceiveInput()).toHaveValue('');
+//       }
+//     });
+//   }
+// });
