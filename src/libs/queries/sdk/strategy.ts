@@ -20,6 +20,7 @@ import {
 import {
   getStrategyStatus,
   isGradientStrategy,
+  isZero,
 } from 'components/strategies/common/utils';
 import { StrategyAPI, StrategyOrderAPI } from 'libs/queries/extApi/strategy';
 import { carbonApi } from 'services/carbonApi';
@@ -133,6 +134,44 @@ interface PropsPair {
   quote?: string;
 }
 
+/** Inverse a base/quote strategy to quote/base */
+const reverseStrategy = (strategy: AnyStrategy): AnyStrategy => {
+  const invert = (value: string) => {
+    if (isZero(value)) return '0';
+    return new SafeDecimal(1).div(value).toString();
+  };
+  // @todo(gradient): implement reverse for gradient strategies
+  if (isGradientStrategy(strategy)) return strategy;
+  return {
+    ...strategy,
+    base: strategy.quote,
+    quote: strategy.base,
+    buy: {
+      min: invert(strategy.sell.max),
+      max: invert(strategy.sell.min),
+      marginalPrice: invert(strategy.sell.marginalPrice),
+      budget: strategy.sell.budget,
+    },
+    sell: {
+      min: invert(strategy.buy.max),
+      max: invert(strategy.buy.min),
+      marginalPrice: invert(strategy.buy.marginalPrice),
+      budget: strategy.buy.budget,
+    },
+  };
+};
+const normalizeStrategy = (
+  base: string,
+  quote: string,
+  strategy: AnyStrategy,
+) => {
+  if (base === strategy.quote.address && quote === strategy.base.address) {
+    return reverseStrategy(strategy);
+  } else {
+    return strategy;
+  }
+};
+
 export const useGetPairStrategies = (pair?: PropsPair) => {
   const query = useGetAllStrategies({ enabled: true });
   return useMemo(() => {
@@ -141,12 +180,10 @@ export const useGetPairStrategies = (pair?: PropsPair) => {
     }
     const base = getAddress(pair.base);
     const quote = getAddress(pair.quote);
-    return {
-      ...query,
-      data: query.data?.filter((s) => {
-        return s.base.address === base && s.quote.address === quote;
-      }),
-    };
+    const data = query.data
+      ?.map((s) => normalizeStrategy(base, quote, s))
+      .filter((s) => s.base.address === base && s.quote.address === quote);
+    return { ...query, data };
   }, [pair, query]);
 };
 
