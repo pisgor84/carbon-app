@@ -4,8 +4,7 @@ const browsers = { chromium, firefox, webkit };
 type BrowserName = keyof typeof browsers;
 
 const tenderlyId = 'd0852fd4-e587-4826-8765-9c80348cec8d';
-const apiUrl =
-  'https://carbon-multi-endpoint-staging-152368584642.europe-west2.run.app/preview/backends';
+const apiUrl = `${process.env.BACKEND_TENDERLY_API}/preview/backends`;
 
 const doesBackendExist = async () => {
   const res = await fetch(`${apiUrl}/${tenderlyId}`);
