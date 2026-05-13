@@ -9,6 +9,7 @@ import { Wallet } from 'ethers';
 import { CreateStrategyTestCase, toDebugStrategy } from './strategy';
 import { TokenApprovalDriver } from './TokenApprovalDriver';
 import mockLocalStorage from '../mocks/localstorage.json' with { type: 'json' };
+import { proxyUrl } from './api';
 
 const vNetConfig: CreateVirtualNetworkBody = {
   slug: 'e2e-ci',
@@ -44,6 +45,7 @@ export const setupLocalStorage = async (page: Page) => {
   });
   await page.goto('empty');
   return page.evaluate((storage) => {
+    storage.carbonApi = proxyUrl;
     // each value is stringified to match lsservice
     for (const [key, value] of Object.entries(storage)) {
       localStorage.setItem(
