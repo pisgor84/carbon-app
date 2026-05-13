@@ -44,8 +44,11 @@ export const setupLocalStorage = async (page: Page) => {
     return route.fulfill({ status: 200, contentType: 'text/plain', body: '' });
   });
   await page.goto('empty');
+  const mockStorage = {
+    ...mockLocalStorage,
+    carbonApi: proxyUrl,
+  };
   return page.evaluate((storage) => {
-    storage.carbonApi = proxyUrl;
     // each value is stringified to match lsservice
     for (const [key, value] of Object.entries(storage)) {
       localStorage.setItem(
@@ -53,7 +56,7 @@ export const setupLocalStorage = async (page: Page) => {
         JSON.stringify(value),
       );
     }
-  }, mockLocalStorage);
+  }, mockStorage);
 };
 
 export const removeFork = async (testInfo: TestInfo) => {

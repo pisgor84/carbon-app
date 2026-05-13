@@ -2,7 +2,7 @@ const tenderlyId = 'd0852fd4-e587-4826-8765-9c80348cec8d';
 const apiUrl = `${process.env.BACKEND_TENDERLY_API}/preview/backends`;
 export const proxyUrl = `${process.env.BACKEND_TENDERLY_API}/v1/proxy/${tenderlyId}/`;
 
-const doesBackendExist = async () => {
+export const doesBackendExist = async () => {
   const res = await fetch(`${apiUrl}/${tenderlyId}`);
   const result = await res.json();
   return result.status === 'ready';
