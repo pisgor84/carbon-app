@@ -4,6 +4,7 @@ export const proxyUrl = `${process.env.BACKEND_TENDERLY_API}/v1/proxy/${tenderly
 
 export const doesBackendExist = async () => {
   const res = await fetch(`${apiUrl}/${tenderlyId}`);
+  if (!res.ok) return false;
   const result = await res.json();
   return result.status === 'ready';
 };
