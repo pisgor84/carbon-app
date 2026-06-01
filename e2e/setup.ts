@@ -12,6 +12,7 @@ async function globalSetup(config: FullConfig) {
 
     // create RPC if do not exist
     try {
+      console.log('FETCH');
       const backendExist = doesBackendExist();
       if (!backendExist) {
         await waitForBackend();

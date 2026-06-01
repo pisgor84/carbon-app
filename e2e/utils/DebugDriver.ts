@@ -1,42 +1,10 @@
-import { Page, TestInfo } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { waitFor } from './../utils/operators';
-import {
-  createVirtualNetwork,
-  deleteVirtualNetwork,
-  CreateVirtualNetworkBody,
-} from './../utils/tenderly';
 import { Wallet } from 'ethers';
 import { CreateStrategyTestCase, toDebugStrategy } from './strategy';
 import { TokenApprovalDriver } from './TokenApprovalDriver';
 import mockLocalStorage from '../mocks/localstorage.json' with { type: 'json' };
 import { proxyUrl } from './api';
-
-const vNetConfig: CreateVirtualNetworkBody = {
-  slug: 'e2e-ci',
-  display_name: 'E2E-CI',
-  fork_config: {
-    network_id: 1,
-    block_number: '18120000',
-  },
-  virtual_network_config: {
-    chain_config: {
-      chain_id: 1,
-    },
-  },
-  sync_state_config: {
-    enabled: false,
-  },
-  explorer_page_config: {
-    enabled: false,
-    verification_visibility: 'bytecode',
-  },
-};
-
-export const setupVirtualNetwork = async (testInfo: TestInfo) => {
-  const vNet = await createVirtualNetwork(structuredClone(vNetConfig));
-  process.env[`TENDERLY_FORK_ID_TEST_${testInfo.testId}`] = vNet.id;
-  return vNet;
-};
 
 export const setupLocalStorage = async (page: Page) => {
   // We need to be on a page to set localstorage so we create an empty page
@@ -57,11 +25,6 @@ export const setupLocalStorage = async (page: Page) => {
       );
     }
   }, mockStorage);
-};
-
-export const removeFork = async (testInfo: TestInfo) => {
-  const id = process.env[`TENDERLY_FORK_ID_TEST_${testInfo.testId}`];
-  if (id) await deleteVirtualNetwork(id);
 };
 
 interface ImposterConfig {

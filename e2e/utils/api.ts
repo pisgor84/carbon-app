@@ -3,9 +3,11 @@ const apiUrl = `${process.env.BACKEND_TENDERLY_API}/preview/backends`;
 export const proxyUrl = `${process.env.BACKEND_TENDERLY_API}/v1/proxy/${tenderlyId}/`;
 
 export const doesBackendExist = async () => {
+  console.log('Fetch', `${apiUrl}/${tenderlyId}`);
   const res = await fetch(`${apiUrl}/${tenderlyId}`);
   if (!res.ok) return false;
   const result = await res.json();
+  console.log(result);
   return result.status === 'ready';
 };
 
