@@ -1,5 +1,5 @@
 import { chromium, firefox, webkit, type FullConfig } from '@playwright/test';
-import { doesBackendExist, waitForBackend } from './utils/api';
+import { createBackend, waitForBackend } from './utils/api';
 
 const browsers = { chromium, firefox, webkit };
 type BrowserName = keyof typeof browsers;
@@ -11,15 +11,12 @@ async function globalSetup(config: FullConfig) {
     if (!baseURL) return;
 
     // create RPC if do not exist
-    try {
-      console.log('FETCH');
-      const backendExist = doesBackendExist();
-      if (!backendExist) {
-        await waitForBackend();
-      }
-    } catch (err) {
-      console.log(err);
-      return;
+    console.log('Check if backend exist');
+    const backendExist = await waitForBackend();
+    console.log({ backendExist });
+    if (!backendExist) {
+      console.log('Create a new backend');
+      await createBackend();
     }
 
     const browser = await browsers[project.name as BrowserName].launch();
