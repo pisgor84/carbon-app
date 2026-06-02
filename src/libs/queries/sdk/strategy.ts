@@ -37,7 +37,10 @@ const buildStrategyFromAPI = (
     budget: order.budget,
     min: order.min,
     max: order.max,
-    marginalPrice: order.marginal,
+    marginalPrice:
+      'marginalPrice' in order
+        ? (order.marginalPrice as string)
+        : order.marginal,
   });
   const buy = toOrder(s.buy);
   const sell = toOrder(s.sell);
