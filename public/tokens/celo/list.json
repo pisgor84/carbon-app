@@ -9,6 +9,14 @@
       "symbol": "AUDm",
       "decimals": 18,
       "logoURI": "/tokens/celo/0x7175504C455076F15c04A2F90a8e352281F492F9.svg"
+    },
+    {
+      "chainId": 42220,
+      "address": "0xaf37E8B6C9ED7f6318979f56Fc287d76c30847ff",
+      "name": "Tether Gold",
+      "symbol": "XAUt0",
+      "decimals": 6,
+      "logoURI": "/tokens/celo/0xaf37E8B6C9ED7f6318979f56Fc287d76c30847ff.png"
     }
   ],
   "version": {
