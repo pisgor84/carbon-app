@@ -1,4 +1,6 @@
-const NO_NO_COUNTRIES = [
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+const BLOCKED_COUNTRIES = [
   'BY',
   'BI',
   'CF',
@@ -23,9 +25,8 @@ const NO_NO_COUNTRIES = [
   'VE',
   'YE',
   'ZW',
-];
 
-const LIMITED_COUNTRIES = [
+  // Limited countries
   'US',
   'PR',
   'AS',
@@ -34,43 +35,32 @@ const LIMITED_COUNTRIES = [
   'VI',
 ];
 
-const BLOCKED_COUNTRIES = [
-  ...NO_NO_COUNTRIES,
-  ...LIMITED_COUNTRIES,
-];
-
-export default async function handler(request: Request) {
-  if (request.method !== 'GET') {
-    return new Response(
-      JSON.stringify({
-        error: 'Method not allowed',
-      }),
-      {
-        status: 405,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store',
-        },
-      },
-    );
+export default function handler(
+  req: VercelRequest,
+  res: VercelResponse,
+) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({
+      error: 'Method not allowed',
+    });
   }
 
-  const country =
-    request.headers.get('x-vercel-ip-country') || '';
+  const countryHeader = req.headers['x-vercel-ip-country'];
 
-  const isBlocked = BLOCKED_COUNTRIES.includes(country);
+  const country = Array.isArray(countryHeader)
+    ? countryHeader[0]
+    : countryHeader || '';
 
-  return new Response(
-    JSON.stringify(isBlocked),
-    {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control':
-          'no-store, no-cache, max-age=0, must-revalidate',
-        Expires: '0',
-        Pragma: 'no-cache',
-      },
-    },
+  const isBlocked = BLOCKED_COUNTRIES.includes(
+    country.toUpperCase(),
   );
+
+  res.setHeader(
+    'Cache-Control',
+    'no-store, no-cache, max-age=0, must-revalidate',
+  );
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  return res.status(200).json(isBlocked);
 }
