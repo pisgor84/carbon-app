@@ -394,6 +394,7 @@ fontFamily: {
 ```
 
 You can also remove the unused `@font-face` from the [`src/fonts.css`](src/fonts.css) file.
+Vercel COTI deployment
 
 # License
 
