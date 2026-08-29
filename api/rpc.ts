@@ -8,7 +8,9 @@ export default async function handler(req: Request) {
 
   if (req.method !== 'POST') {
     return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
+      JSON.stringify({
+        error: 'Method not allowed',
+      }),
       {
         status: 405,
         headers: {
@@ -22,13 +24,17 @@ export default async function handler(req: Request) {
   try {
     const body = await req.text();
 
-    const upstream = await fetch('https://mainnet.coti.io/rpc', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const upstream = await fetch(
+      'https://tokyo.fullnode.mainnet.coti.io/rpc',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body,
+        signal: AbortSignal.timeout(10000),
       },
-      body,
-    });
+    );
 
     const responseBody = await upstream.text();
 
@@ -45,13 +51,17 @@ export default async function handler(req: Request) {
     return new Response(
       JSON.stringify({
         error: 'RPC proxy failed',
-        message: error instanceof Error ? error.message : String(error),
+        message:
+          error instanceof Error
+            ? error.message
+            : String(error),
       }),
       {
         status: 500,
         headers: {
           ...corsHeaders(),
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
         },
       },
     );
